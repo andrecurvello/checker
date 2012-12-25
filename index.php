@@ -47,7 +47,7 @@
 
       <h1>Checker: Keep your web apps up-to-date</h1>
 
-        <table class="table table-striped table-bordered table-hover table-condensed" style="width:300px">
+        <table class="table table-striped table-bordered table-hover table-condensed" style="width:500px">
 
         <thead>
             <tr>
