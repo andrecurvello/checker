@@ -52,8 +52,8 @@
         <thead>
             <tr>
                 <th>Apps</th>
-                <th>Local</th>
-                <th>Remote</th>
+                <th>Version</th>
+                <th>Latest</th>
             </tr>
         </thead>
         
