@@ -12,4 +12,5 @@ Supported apps:
  * DokuWiki
  * PhpMyAdmin
  * Wordpress
+ * Dotclear
  * Checker

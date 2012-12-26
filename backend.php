@@ -140,6 +140,25 @@ if(defined("WORDPRESS")) {
     $json_version[] = $wordpress;
 }
 
+if(defined("DOTCLEAR")) {
+    $handle = fopen(DOTCLEAR."/inc/prepend.php", "rb");
+    if($handle) {
+        $contents = '';
+        while (!feof($handle)) { $contents .= fread($handle, 8192);}
+        fclose($handle);
+    }
+    preg_match("/define\('DC_VERSION','(.*)'\);/", $contents, $matches);
+    $dotclear['Dotclear']['local'] = $matches[1];
+
+    
+    $contents = file_get_contents("http://download.dotclear.org/versions.xml");
+    //TODO: parse xml
+    preg_match("/name=\"stable\" version=\"(.*)\"/", $contents, $matches);
+    $dotclear['Dotclear']['remote'] = $matches[1];
+
+    $json_version[] = $dotclear;
+}
+
 $handle = fopen("VERSION", "rb");
 if($handle) {
     $contents = '';
