@@ -6,5 +6,6 @@ define("PHPSYSINFO", "/home/erkan/public_html/phpsysinfo");
 define("MEDIAWIKI", "/home/erkan/public_html/mediawiki");
 define("DOKUWIKI", "/home/erkan/public_html/dokuwiki");
 define("PHPMYADMIN", "/home/erkan/public_html/phpmyadmin");
+define("WORDPRESS", "/home/erkan/public_html/wordpress");
 
 ?>

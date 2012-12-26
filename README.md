@@ -9,6 +9,7 @@ Supported apps:
  * OwnCloud
  * phpSysInfo
  * MediaWiki
- * Dokuwiki
- * phpMyAdmin
+ * DokuWiki
+ * PhpMyAdmin
+ * Wordpress
  * Checker
