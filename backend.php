@@ -1,6 +1,6 @@
 <?php
 
-$all_version = array();
+$json_version = array();
 
 require_once("config.php");
 
@@ -19,7 +19,7 @@ if(defined("PIWIGO")) {
     $piwigo['Piwigo']['local'] = $matches[1];
     $piwigo['Piwigo']['remote'] = $new_piwigo_version;
 
-    $all_version[] = $piwigo;
+    $json_version[] = $piwigo;
 }
 
 if(defined("OWNCLOUD")) {
@@ -50,7 +50,7 @@ if(defined("OWNCLOUD")) {
     $ocs['OwnCloud']['local'] = OC_Util::getVersionString();
     $ocs['OwnCloud']['remote'] = $tmp['versionstring'];
 
-    $all_version[] = $ocs;
+    $json_version[] = $ocs;
 }
 
 if(defined("PHPSYSINFO")) {
@@ -72,7 +72,7 @@ if(defined("PHPSYSINFO")) {
     preg_match("/const PSI_VERSION = '(.*)'/", $psi_file, $matches);
     $phpsysinfo['phpSysInfo']['remote'] = $matches[1];
 
-    $all_version[] = $phpsysinfo;
+    $json_version[] = $phpsysinfo;
 }
 
 if(defined("MEDIAWIKI")) {
@@ -87,7 +87,7 @@ if(defined("MEDIAWIKI")) {
     exec("git ls-remote --tags https://gerrit.wikimedia.org/r/p/mediawiki/core.git | cut  -f2 | tr -d 'refs/tags/' | sort -r --version-sort --field-separator=. -k2 | head -n 1", $output);
     $mediawiki['MediaWiki']['remote'] = $output;
 
-    $all_version[] = $mediawiki;
+    $json_version[] = $mediawiki;
 }
 
 
@@ -103,7 +103,7 @@ if(defined("DOKUWIKI")) {
     $dokuwiki_file = file_get_contents("https://raw.github.com/splitbrain/dokuwiki/stable/VERSION");
     $dokuwiki['Dokuwiki']['remote'] = $dokuwiki_file;
 
-    $all_version[] = $dokuwiki;
+    $json_version[] = $dokuwiki;
 }
 
 
@@ -121,11 +121,24 @@ if(defined("PHPMYADMIN")) {
     
     $pma['phpMyAdmin']['remote'] = $matches[1];
 
-    $all_version[] = $pma;
+    $json_version[] = $pma;
 }
 
 
+$handle = fopen("VERSION", "rb");
+$contents = '';
+while (!feof($handle)) { $contents .= fread($handle, 8192);}
+fclose($handle);
+
+$checker['Checker']['local'] = $contents;
+
+$checker_file = file_get_contents("https://raw.github.com/rk4an/checker/master/VERSION");
+$checker['Checker']['remote'] = $checker_file;
+
+$json_version[] = $checker;
+    
+
 //Results
-echo json_encode($all_version);
+echo json_encode($json_version);
 
 ?>
