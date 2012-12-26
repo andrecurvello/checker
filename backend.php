@@ -10,9 +10,11 @@ if(defined("PIWIGO")) {
     $new_piwigo_version = trim($all_piwigo_versions[0]);
 
     $handle = fopen(PIWIGO."/include/constants.php", "rb");
-    $contents = '';
-    while (!feof($handle)) { $contents .= fread($handle, 8192);}
-    fclose($handle);
+    if($handle) {
+        $contents = '';
+        while (!feof($handle)) { $contents .= fread($handle, 8192);}
+        fclose($handle);
+    }
 
     preg_match("/define\('PHPWG_VERSION', '(.*)'\);/", $contents, $matches);
 
@@ -55,9 +57,12 @@ if(defined("OWNCLOUD")) {
 
 if(defined("PHPSYSINFO")) {
     $handle = fopen(PHPSYSINFO."/includes/class.CommonFunctions.inc.php", "rb");
-    $contents = '';
-    while (!feof($handle)) { $contents .= fread($handle, 8192); }
-    fclose($handle);
+    if($handle) {
+        $contents = '';
+        while (!feof($handle)) { $contents .= fread($handle, 8192); }
+        fclose($handle);
+    }
+
     preg_match("/const PSI_VERSION = '(.*)'/", $contents, $matches);
 
     $phpsysinfo['phpSysInfo']['local'] = $matches[1];
@@ -77,9 +82,11 @@ if(defined("PHPSYSINFO")) {
 
 if(defined("MEDIAWIKI")) {
     $handle = fopen(MEDIAWIKI."/includes/DefaultSettings.php", "rb");
-    $contents = '';
-    while (!feof($handle)) { $contents .= fread($handle, 8192); }
-    fclose($handle);
+    if($handle) {
+        $contents = '';
+        while (!feof($handle)) { $contents .= fread($handle, 8192); }
+        fclose($handle);
+    }
     preg_match("/wgVersion = '(.*)'/", $contents, $matches);
 
     $mediawiki['MediaWiki']['local'] = $matches[1];
@@ -94,10 +101,11 @@ if(defined("MEDIAWIKI")) {
 
 if(defined("DOKUWIKI")) {
     $handle = fopen(DOKUWIKI."/VERSION", "rb");
-    $contents = '';
-    while (!feof($handle)) { $contents .= fread($handle, 8192);}
-    fclose($handle);
-
+    if($handle) {
+        $contents = '';
+        while (!feof($handle)) { $contents .= fread($handle, 8192);}
+        fclose($handle);
+    }
     $dokuwiki['Dokuwiki']['local'] = $contents;
 
     $dokuwiki_file = file_get_contents("https://raw.github.com/splitbrain/dokuwiki/stable/VERSION");
@@ -109,9 +117,11 @@ if(defined("DOKUWIKI")) {
 
 if(defined("PHPMYADMIN")) {
     $handle = fopen(PHPMYADMIN."/libraries/Config.class.php", "rb");
-    $contents = '';
-    while (!feof($handle)) { $contents .= fread($handle, 8192);}
-    fclose($handle);
+    if($handle) {
+        $contents = '';
+        while (!feof($handle)) { $contents .= fread($handle, 8192);}
+        fclose($handle);
+    }
     preg_match("/this->set\('PMA_VERSION', '(.*)'\);/", $contents, $matches);
 
     $pma['phpMyAdmin']['local'] = $matches[1];
@@ -126,9 +136,11 @@ if(defined("PHPMYADMIN")) {
 
 
 $handle = fopen("VERSION", "rb");
-$contents = '';
-while (!feof($handle)) { $contents .= fread($handle, 8192);}
-fclose($handle);
+if($handle) {
+    $contents = '';
+    while (!feof($handle)) { $contents .= fread($handle, 8192);}
+    fclose($handle);
+}
 
 $checker['Checker']['local'] = $contents;
 
