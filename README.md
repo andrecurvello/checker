@@ -13,4 +13,5 @@ Supported apps:
  * PhpMyAdmin
  * Wordpress
  * Dotclear
+ * Gitlab
  * Checker
