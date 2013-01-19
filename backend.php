@@ -159,6 +159,22 @@ if(defined("DOTCLEAR")) {
     $json_version[] = $dotclear;
 }
 
+if(defined("GITLAB")) {
+    $handle = fopen(GITLAB."/VERSION", "rb");
+    if($handle) {
+        $contents = '';
+        while (!feof($handle)) { $contents .= fread($handle, 8192);}
+        fclose($handle);
+    }
+    $gitlab['Gitlab']['local'] = $contents;
+
+    
+    $contents = file_get_contents("https://raw.github.com/gitlabhq/gitlabhq/stable/VERSION");
+    $gitlab['Gitlab']['remote'] = $contents;
+
+    $json_version[] = $gitlab;
+}
+
 $handle = fopen("VERSION", "rb");
 if($handle) {
     $contents = '';
