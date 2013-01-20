@@ -5,6 +5,9 @@ $json_version = array();
 require_once("config.php");
 
 if(defined("PIWIGO")) {
+    $piwigo['Piwigo']['local'] = "0";
+    $piwigo['Piwigo']['remote'] = "0";
+    
     $handle = fopen(PIWIGO."/include/constants.php", "rb");
     if($handle) {
         $contents = '';
@@ -14,19 +17,21 @@ if(defined("PIWIGO")) {
         preg_match("/define\('PHPWG_VERSION', '(.*)'\);/", $contents, $matches);
         $piwigo['Piwigo']['local'] = $matches[1];
     }
-    else {
-        $piwigo['Piwigo']['local'] = "0";
-    }
 
     $result = file_get_contents("http://piwigo.org/download/all_versions.php");
-    $all_piwigo_versions = @explode("\n", $result);
-    $new_piwigo_version = trim($all_piwigo_versions[0]);
-    $piwigo['Piwigo']['remote'] = $new_piwigo_version;
+    if($result) {
+        $all_piwigo_versions = @explode("\n", $result);
+        $new_piwigo_version = trim($all_piwigo_versions[0]);
+        $piwigo['Piwigo']['remote'] = $new_piwigo_version;
+    }
 
     $json_version[] = $piwigo;
 }
 
 if(defined("OWNCLOUD")) {
+    $piwigo['OwnCloud']['local'] = "0";
+    $piwigo['OwnCloud']['remote'] = "0";
+    
     include(OWNCLOUD."/lib/util.php");
     $ocs['OwnCloud']['local'] = OC_Util::getVersionString();
     
@@ -53,6 +58,9 @@ if(defined("OWNCLOUD")) {
 }
 
 if(defined("PHPSYSINFO")) {
+    $piwigo['phpSysInfo']['local'] = "0";
+    $piwigo['phpSysInfo']['remote'] = "0";
+    
     $handle = fopen(PHPSYSINFO."/includes/class.CommonFunctions.inc.php", "rb");
     if($handle) {
         $contents = '';
@@ -62,10 +70,6 @@ if(defined("PHPSYSINFO")) {
         preg_match("/const PSI_VERSION = '(.*)'/", $contents, $matches);
         $phpsysinfo['phpSysInfo']['local'] = $matches[1];
     }
-    else {
-        $phpsysinfo['phpSysInfo']['local'] = "0";
-    }
-
 
     //for 3.1.x version
     if($phpsysinfo['phpSysInfo']['local'] == 0) {
@@ -78,9 +82,6 @@ if(defined("PHPSYSINFO")) {
             preg_match("/define\('PSI_VERSION','(.*)'\);/", $contents, $matches);
             $phpsysinfo['phpSysInfo']['local'] = $matches[1];
         }
-        else {
-            $phpsysinfo['phpSysInfo']['local'] = "0";
-        }
     }
 
     //get latest tag of a local repo
@@ -90,13 +91,18 @@ if(defined("PHPSYSINFO")) {
 
     //get latest file for master branch on git
     $psi_file = file_get_contents("https://raw.github.com/rk4an/phpsysinfo/master/config.php");
-    preg_match("/define\('PSI_VERSION','(.*)'\);/", $psi_file, $matches);
-    $phpsysinfo['phpSysInfo']['remote'] = $matches[1];
+    if($psi_file) {
+        preg_match("/define\('PSI_VERSION','(.*)'\);/", $psi_file, $matches);
+        $phpsysinfo['phpSysInfo']['remote'] = $matches[1];
+    }
 
     $json_version[] = $phpsysinfo;
 }
 
 if(defined("MEDIAWIKI")) {
+    $piwigo['MediaWiki']['local'] = "0";
+    $piwigo['MediaWiki']['remote'] = "0";
+    
     $handle = fopen(MEDIAWIKI."/includes/DefaultSettings.php", "rb");
     if($handle) {
         $contents = '';
@@ -106,9 +112,6 @@ if(defined("MEDIAWIKI")) {
         preg_match("/wgVersion = '(.*)'/", $contents, $matches);
         $mediawiki['MediaWiki']['local'] = $matches[1];
     }
-    else {
-        $mediawiki['MediaWiki']['local'] = "0";
-    }
 
     exec("git ls-remote --tags https://gerrit.wikimedia.org/r/p/mediawiki/core.git | cut  -f2 | tr -d 'refs/tags/' | sort -r --version-sort --field-separator=. -k2 | head -n 1", $output);
     $mediawiki['MediaWiki']['remote'] = $output;
@@ -117,6 +120,9 @@ if(defined("MEDIAWIKI")) {
 }
 
 if(defined("DOKUWIKI")) {
+    $piwigo['Dokuwiki']['local'] = "0";
+    $piwigo['Dokuwiki']['remote'] = "0";
+    
     $handle = fopen(DOKUWIKI."/VERSION", "rb");
     if($handle) {
         $contents = '';
@@ -125,17 +131,19 @@ if(defined("DOKUWIKI")) {
         
         $dokuwiki['Dokuwiki']['local'] = $contents;
     }
-    else {
-        $dokuwiki['Dokuwiki']['local'] = "0";
-    }
 
     $dokuwiki_file = file_get_contents("https://raw.github.com/splitbrain/dokuwiki/stable/VERSION");
-    $dokuwiki['Dokuwiki']['remote'] = $dokuwiki_file;
+    if($dokuwiki_file) {
+        $dokuwiki['Dokuwiki']['remote'] = $dokuwiki_file;
+    }
 
     $json_version[] = $dokuwiki;
 }
 
 if(defined("PHPMYADMIN")) {
+    $piwigo['phpMyAdmin']['local'] = "0";
+    $piwigo['phpMyAdmin']['remote'] = "0";
+
     $handle = fopen(PHPMYADMIN."/libraries/Config.class.php", "rb");
     if($handle) {
         $contents = '';
@@ -145,18 +153,20 @@ if(defined("PHPMYADMIN")) {
         preg_match("/this->set\('PMA_VERSION', '(.*)'\);/", $contents, $matches);
         $pma['phpMyAdmin']['local'] = $matches[1];
     }
-    else {
-        $pma['phpMyAdmin']['local'] = "0";
-    }
 
     $pma_latest = file_get_contents("http://www.phpmyadmin.net/home_page/version.js");
-    preg_match("/PMA_latest_version = '(.*)'/", $pma_latest, $matches);
-    $pma['phpMyAdmin']['remote'] = $matches[1];
+    if($pma_latest) {
+        preg_match("/PMA_latest_version = '(.*)'/", $pma_latest, $matches);
+        $pma['phpMyAdmin']['remote'] = $matches[1];
+    }
 
     $json_version[] = $pma;
 }
 
 if(defined("WORDPRESS")) {
+    $piwigo['Wordpress']['local'] = "0";
+    $piwigo['Wordpress']['remote'] = "0";
+    
     $handle = fopen(WORDPRESS."/wp-includes/version.php", "rb");
     if($handle) {
         $contents = '';
@@ -166,18 +176,20 @@ if(defined("WORDPRESS")) {
         preg_match("/wp_version = '(.*)';/", $contents, $matches);
         $wordpress['Wordpress']['local'] = $matches[1];
     }
-    else {
-        $wordpress['Wordpress']['local'] = "0";
-    }
 
     $wordpress_latest = file_get_contents("http://api.wordpress.org/core/version-check/1.6/");
-    $wordpress_array = unserialize($wordpress_latest);
-    $wordpress['Wordpress']['remote'] = $wordpress_array['offers'][0]['current'];
+    if($wordpress_latest) {
+        $wordpress_array = unserialize($wordpress_latest);
+        $wordpress['Wordpress']['remote'] = $wordpress_array['offers'][0]['current'];
+    }
 
     $json_version[] = $wordpress;
 }
 
 if(defined("DOTCLEAR")) {
+    $piwigo['Dotclear']['local'] = "0";
+    $piwigo['Dotclear']['remote'] = "0";
+    
     $handle = fopen(DOTCLEAR."/inc/prepend.php", "rb");
     if($handle) {
         $contents = '';
@@ -187,19 +199,21 @@ if(defined("DOTCLEAR")) {
         preg_match("/define\('DC_VERSION','(.*)'\);/", $contents, $matches);
         $dotclear['Dotclear']['local'] = $matches[1];
     }
-    else {
-        $dotclear['Dotclear']['local'] = "0";
-    }
     
     $contents = file_get_contents("http://download.dotclear.org/versions.xml");
-    //TODO: parse xml
-    preg_match("/name=\"stable\" version=\"(.*)\"/", $contents, $matches);
-    $dotclear['Dotclear']['remote'] = $matches[1];
+    
+    if($contents) {
+        preg_match("/name=\"stable\" version=\"(.*)\"/", $contents, $matches);
+        $dotclear['Dotclear']['remote'] = $matches[1];
+    }
 
     $json_version[] = $dotclear;
 }
 
 if(defined("GITLAB")) {
+    $piwigo['Gitlab']['local'] = "0";
+    $piwigo['Gitlab']['remote'] = "0";
+    
     $handle = fopen(GITLAB."/VERSION", "rb");
     if($handle) {
         $contents = '';
@@ -208,16 +222,17 @@ if(defined("GITLAB")) {
         
         $gitlab['Gitlab']['local'] = $contents;
     }
-    else {
-        $gitlab['Gitlab']['local'] = "0";
-    }
 
     $contents = file_get_contents("https://raw.github.com/gitlabhq/gitlabhq/stable/VERSION");
-    $gitlab['Gitlab']['remote'] = $contents;
+    if($contents) {
+        $gitlab['Gitlab']['remote'] = $contents;
+    }
 
     $json_version[] = $gitlab;
 }
 
+$piwigo['Checker']['local'] = "0";
+$piwigo['Checker']['remote'] = "0";
 $handle = fopen("VERSION", "rb");
 if($handle) {
     $contents = '';
@@ -226,13 +241,11 @@ if($handle) {
     
     $checker['Checker']['local'] = $contents;
 }
-else {
-    $checker['Checker']['local'] = "0";
-}
 
 $checker_file = file_get_contents("https://raw.github.com/rk4an/checker/master/VERSION");
-$checker['Checker']['remote'] = $checker_file;
-
+if($checker_file) {
+    $checker['Checker']['remote'] = $checker_file;
+}
 $json_version[] = $checker;
 
 echo json_encode($json_version);
