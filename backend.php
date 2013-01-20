@@ -26,7 +26,6 @@ if(defined("OWNCLOUD")) {
     include(OWNCLOUD."/lib/util.php");
     $ocs['OwnCloud']['local'] = OC_Util::getVersionString();
     
-    
     $updaterurl='http://apps.owncloud.com/updater.php';
     $version = OC_Util::getVersion();
     $version['installed'] = '';
@@ -59,14 +58,26 @@ if(defined("PHPSYSINFO")) {
     preg_match("/const PSI_VERSION = '(.*)'/", $contents, $matches);
     $phpsysinfo['phpSysInfo']['local'] = $matches[1];
 
+    //for 3.1.x version
+    if($matches[1] == null) {
+        $handle = fopen(PHPSYSINFO."/config.php", "rb");
+        if($handle) {
+            $contents = '';
+            while (!feof($handle)) { $contents .= fread($handle, 8192); }
+            fclose($handle);
+        }
+        preg_match("/define\('PSI_VERSION','(.*)'\);/", $contents, $matches);
+        $phpsysinfo['phpSysInfo']['local'] = $matches[1];
+    }
+
     //get latest tag of a local repo
     //(but you are not sure if dir is a git repo and the latest tag are stable tag, and we need to fetch before)
     //exec("cd ". $phpsysinfo_local . " && git describe", $output);
     //$phpsysinfo['phpSysInfo']['remote'] = $output;
 
     //get latest file for master branch on git
-    $psi_file = file_get_contents("https://raw.github.com/rk4an/phpsysinfo/master/includes/class.CommonFunctions.inc.php");
-    preg_match("/const PSI_VERSION = '(.*)'/", $psi_file, $matches);
+    $psi_file = file_get_contents("https://raw.github.com/rk4an/phpsysinfo/master/config.php");
+    preg_match("/define\('PSI_VERSION','(.*)'\);/", $psi_file, $matches);
     $phpsysinfo['phpSysInfo']['remote'] = $matches[1];
 
     $json_version[] = $phpsysinfo;
@@ -88,8 +99,6 @@ if(defined("MEDIAWIKI")) {
     $json_version[] = $mediawiki;
 }
 
-
-
 if(defined("DOKUWIKI")) {
     $handle = fopen(DOKUWIKI."/VERSION", "rb");
     if($handle) {
@@ -104,7 +113,6 @@ if(defined("DOKUWIKI")) {
 
     $json_version[] = $dokuwiki;
 }
-
 
 if(defined("PHPMYADMIN")) {
     $handle = fopen(PHPMYADMIN."/libraries/Config.class.php", "rb");
@@ -188,9 +196,7 @@ $checker_file = file_get_contents("https://raw.github.com/rk4an/checker/master/V
 $checker['Checker']['remote'] = $checker_file;
 
 $json_version[] = $checker;
-    
 
-//Results
 echo json_encode($json_version);
 
 ?>
