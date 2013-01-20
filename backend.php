@@ -10,9 +10,13 @@ if(defined("PIWIGO")) {
         $contents = '';
         while (!feof($handle)) { $contents .= fread($handle, 8192);}
         fclose($handle);
+        
+        preg_match("/define\('PHPWG_VERSION', '(.*)'\);/", $contents, $matches);
+        $piwigo['Piwigo']['local'] = $matches[1];
     }
-    preg_match("/define\('PHPWG_VERSION', '(.*)'\);/", $contents, $matches);
-    $piwigo['Piwigo']['local'] = $matches[1];
+    else {
+        $piwigo['Piwigo']['local'] = "0";
+    }
 
     $result = file_get_contents("http://piwigo.org/download/all_versions.php");
     $all_piwigo_versions = @explode("\n", $result);
@@ -54,20 +58,29 @@ if(defined("PHPSYSINFO")) {
         $contents = '';
         while (!feof($handle)) { $contents .= fread($handle, 8192); }
         fclose($handle);
+        
+        preg_match("/const PSI_VERSION = '(.*)'/", $contents, $matches);
+        $phpsysinfo['phpSysInfo']['local'] = $matches[1];
     }
-    preg_match("/const PSI_VERSION = '(.*)'/", $contents, $matches);
-    $phpsysinfo['phpSysInfo']['local'] = $matches[1];
+    else {
+        $phpsysinfo['phpSysInfo']['local'] = "0";
+    }
+
 
     //for 3.1.x version
-    if($matches[1] == null) {
+    if($phpsysinfo['phpSysInfo']['local'] == 0) {
         $handle = fopen(PHPSYSINFO."/config.php", "rb");
         if($handle) {
             $contents = '';
             while (!feof($handle)) { $contents .= fread($handle, 8192); }
             fclose($handle);
+            
+            preg_match("/define\('PSI_VERSION','(.*)'\);/", $contents, $matches);
+            $phpsysinfo['phpSysInfo']['local'] = $matches[1];
         }
-        preg_match("/define\('PSI_VERSION','(.*)'\);/", $contents, $matches);
-        $phpsysinfo['phpSysInfo']['local'] = $matches[1];
+        else {
+            $phpsysinfo['phpSysInfo']['local'] = "0";
+        }
     }
 
     //get latest tag of a local repo
@@ -89,9 +102,13 @@ if(defined("MEDIAWIKI")) {
         $contents = '';
         while (!feof($handle)) { $contents .= fread($handle, 8192); }
         fclose($handle);
+        
+        preg_match("/wgVersion = '(.*)'/", $contents, $matches);
+        $mediawiki['MediaWiki']['local'] = $matches[1];
     }
-    preg_match("/wgVersion = '(.*)'/", $contents, $matches);
-    $mediawiki['MediaWiki']['local'] = $matches[1];
+    else {
+        $mediawiki['MediaWiki']['local'] = "0";
+    }
 
     exec("git ls-remote --tags https://gerrit.wikimedia.org/r/p/mediawiki/core.git | cut  -f2 | tr -d 'refs/tags/' | sort -r --version-sort --field-separator=. -k2 | head -n 1", $output);
     $mediawiki['MediaWiki']['remote'] = $output;
@@ -105,8 +122,12 @@ if(defined("DOKUWIKI")) {
         $contents = '';
         while (!feof($handle)) { $contents .= fread($handle, 8192);}
         fclose($handle);
+        
+        $dokuwiki['Dokuwiki']['local'] = $contents;
     }
-    $dokuwiki['Dokuwiki']['local'] = $contents;
+    else {
+        $dokuwiki['Dokuwiki']['local'] = "0";
+    }
 
     $dokuwiki_file = file_get_contents("https://raw.github.com/splitbrain/dokuwiki/stable/VERSION");
     $dokuwiki['Dokuwiki']['remote'] = $dokuwiki_file;
@@ -120,9 +141,13 @@ if(defined("PHPMYADMIN")) {
         $contents = '';
         while (!feof($handle)) { $contents .= fread($handle, 8192);}
         fclose($handle);
+        
+        preg_match("/this->set\('PMA_VERSION', '(.*)'\);/", $contents, $matches);
+        $pma['phpMyAdmin']['local'] = $matches[1];
     }
-    preg_match("/this->set\('PMA_VERSION', '(.*)'\);/", $contents, $matches);
-    $pma['phpMyAdmin']['local'] = $matches[1];
+    else {
+        $pma['phpMyAdmin']['local'] = "0";
+    }
 
     $pma_latest = file_get_contents("http://www.phpmyadmin.net/home_page/version.js");
     preg_match("/PMA_latest_version = '(.*)'/", $pma_latest, $matches);
@@ -137,9 +162,13 @@ if(defined("WORDPRESS")) {
         $contents = '';
         while (!feof($handle)) { $contents .= fread($handle, 8192);}
         fclose($handle);
+        
+        preg_match("/wp_version = '(.*)';/", $contents, $matches);
+        $wordpress['Wordpress']['local'] = $matches[1];
     }
-    preg_match("/wp_version = '(.*)';/", $contents, $matches);
-    $wordpress['Wordpress']['local'] = $matches[1];
+    else {
+        $wordpress['Wordpress']['local'] = "0";
+    }
 
     $wordpress_latest = file_get_contents("http://api.wordpress.org/core/version-check/1.6/");
     $wordpress_array = unserialize($wordpress_latest);
@@ -154,10 +183,13 @@ if(defined("DOTCLEAR")) {
         $contents = '';
         while (!feof($handle)) { $contents .= fread($handle, 8192);}
         fclose($handle);
-    }
-    preg_match("/define\('DC_VERSION','(.*)'\);/", $contents, $matches);
-    $dotclear['Dotclear']['local'] = $matches[1];
 
+        preg_match("/define\('DC_VERSION','(.*)'\);/", $contents, $matches);
+        $dotclear['Dotclear']['local'] = $matches[1];
+    }
+    else {
+        $dotclear['Dotclear']['local'] = "0";
+    }
     
     $contents = file_get_contents("http://download.dotclear.org/versions.xml");
     //TODO: parse xml
@@ -173,10 +205,13 @@ if(defined("GITLAB")) {
         $contents = '';
         while (!feof($handle)) { $contents .= fread($handle, 8192);}
         fclose($handle);
+        
+        $gitlab['Gitlab']['local'] = $contents;
     }
-    $gitlab['Gitlab']['local'] = $contents;
+    else {
+        $gitlab['Gitlab']['local'] = "0";
+    }
 
-    
     $contents = file_get_contents("https://raw.github.com/gitlabhq/gitlabhq/stable/VERSION");
     $gitlab['Gitlab']['remote'] = $contents;
 
@@ -188,9 +223,12 @@ if($handle) {
     $contents = '';
     while (!feof($handle)) { $contents .= fread($handle, 8192);}
     fclose($handle);
+    
+    $checker['Checker']['local'] = $contents;
 }
-
-$checker['Checker']['local'] = $contents;
+else {
+    $checker['Checker']['local'] = "0";
+}
 
 $checker_file = file_get_contents("https://raw.github.com/rk4an/checker/master/VERSION");
 $checker['Checker']['remote'] = $checker_file;
