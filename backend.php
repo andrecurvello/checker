@@ -29,8 +29,8 @@ if(defined("PIWIGO")) {
 }
 
 if(defined("OWNCLOUD")) {
-    $piwigo['OwnCloud']['local'] = "0";
-    $piwigo['OwnCloud']['remote'] = "0";
+    $ocs['OwnCloud']['local'] = "0";
+    $ocs['OwnCloud']['remote'] = "0";
     
     include(OWNCLOUD."/lib/util.php");
     $ocs['OwnCloud']['local'] = OC_Util::getVersionString();
@@ -58,8 +58,8 @@ if(defined("OWNCLOUD")) {
 }
 
 if(defined("PHPSYSINFO")) {
-    $piwigo['phpSysInfo']['local'] = "0";
-    $piwigo['phpSysInfo']['remote'] = "0";
+    $phpsysinfo['phpSysInfo']['local'] = "0";
+    $phpsysinfo['phpSysInfo']['remote'] = "0";
     
     $handle = fopen(PHPSYSINFO."/includes/class.CommonFunctions.inc.php", "rb");
     if($handle) {
@@ -100,8 +100,8 @@ if(defined("PHPSYSINFO")) {
 }
 
 if(defined("MEDIAWIKI")) {
-    $piwigo['MediaWiki']['local'] = "0";
-    $piwigo['MediaWiki']['remote'] = "0";
+    $mediawiki['MediaWiki']['local'] = "0";
+    $mediawiki['MediaWiki']['remote'] = "0";
     
     $handle = fopen(MEDIAWIKI."/includes/DefaultSettings.php", "rb");
     if($handle) {
@@ -120,8 +120,8 @@ if(defined("MEDIAWIKI")) {
 }
 
 if(defined("DOKUWIKI")) {
-    $piwigo['Dokuwiki']['local'] = "0";
-    $piwigo['Dokuwiki']['remote'] = "0";
+    $dokuwiki['Dokuwiki']['local'] = "0";
+    $dokuwiki['Dokuwiki']['remote'] = "0";
     
     $handle = fopen(DOKUWIKI."/VERSION", "rb");
     if($handle) {
@@ -141,8 +141,8 @@ if(defined("DOKUWIKI")) {
 }
 
 if(defined("PHPMYADMIN")) {
-    $piwigo['phpMyAdmin']['local'] = "0";
-    $piwigo['phpMyAdmin']['remote'] = "0";
+    $pma['phpMyAdmin']['local'] = "0";
+    $pma['phpMyAdmin']['remote'] = "0";
 
     $handle = fopen(PHPMYADMIN."/libraries/Config.class.php", "rb");
     if($handle) {
@@ -164,8 +164,8 @@ if(defined("PHPMYADMIN")) {
 }
 
 if(defined("WORDPRESS")) {
-    $piwigo['Wordpress']['local'] = "0";
-    $piwigo['Wordpress']['remote'] = "0";
+    $wordpress['Wordpress']['local'] = "0";
+    $wordpress['Wordpress']['remote'] = "0";
     
     $handle = fopen(WORDPRESS."/wp-includes/version.php", "rb");
     if($handle) {
@@ -187,8 +187,8 @@ if(defined("WORDPRESS")) {
 }
 
 if(defined("DOTCLEAR")) {
-    $piwigo['Dotclear']['local'] = "0";
-    $piwigo['Dotclear']['remote'] = "0";
+    $dotclear['Dotclear']['local'] = "0";
+    $dotclear['Dotclear']['remote'] = "0";
     
     $handle = fopen(DOTCLEAR."/inc/prepend.php", "rb");
     if($handle) {
@@ -211,8 +211,8 @@ if(defined("DOTCLEAR")) {
 }
 
 if(defined("GITLAB")) {
-    $piwigo['Gitlab']['local'] = "0";
-    $piwigo['Gitlab']['remote'] = "0";
+    $gitlab['Gitlab']['local'] = "0";
+    $gitlab['Gitlab']['remote'] = "0";
     
     $handle = fopen(GITLAB."/VERSION", "rb");
     if($handle) {
@@ -231,8 +231,8 @@ if(defined("GITLAB")) {
     $json_version[] = $gitlab;
 }
 
-$piwigo['Checker']['local'] = "0";
-$piwigo['Checker']['remote'] = "0";
+$checker['Checker']['local'] = "0";
+$checker['Checker']['remote'] = "0";
 $handle = fopen("VERSION", "rb");
 if($handle) {
     $contents = '';
