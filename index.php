@@ -96,6 +96,9 @@
                     if(version["local"] == version["remote"]) {
                         var label = "label-success";
                     }
+                    else if(version["local"] == 0 || version["remote"] == 0) {
+                        var label = "";
+                    }
                     else {
                         var label = "label-warning";
                     }
