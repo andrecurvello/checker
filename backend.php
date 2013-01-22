@@ -8,7 +8,7 @@ if(defined("PIWIGO")) {
     $piwigo['Piwigo']['local'] = "0";
     $piwigo['Piwigo']['remote'] = "0";
     
-    $handle = fopen(PIWIGO."/include/constants.php", "rb");
+    $handle = fopen(PIWIGO."/include/constants.php", "r");
     if($handle) {
         $contents = '';
         while (!feof($handle)) { $contents .= fread($handle, 8192);}
@@ -32,7 +32,23 @@ if(defined("OWNCLOUD")) {
     $ocs['OwnCloud']['local'] = "0";
     $ocs['OwnCloud']['remote'] = "0";
     
-    include(OWNCLOUD."/lib/util.php");
+    $handle = fopen(OWNCLOUD."/lib/util.php", "r");
+    if($handle) {
+        $contents = '';
+        while (!feof($handle)) { $contents .= fread($handle, 8192);}
+        fclose($handle);
+        
+        preg_match("/getVersionString\(\) {\n		return '(.*)';/", $contents, $matches);
+        $ocs['OwnCloud']['local'] = $matches[1];
+    }
+    
+    $ocs_latest = file_get_contents("https://raw.github.com/owncloud/core/stable45/lib/util.php");
+    if($ocs_latest) {
+        preg_match("/getVersionString\(\) {\n		return '(.*)';/", $ocs_latest, $matches);
+        $ocs['OwnCloud']['remote'] = $matches[1];
+    }
+    
+    /*include(OWNCLOUD."/lib/util.php");
     $ocs['OwnCloud']['local'] = OC_Util::getVersionString();
     
     $updaterurl='http://apps.owncloud.com/updater.php';
@@ -52,7 +68,9 @@ if(defined("OWNCLOUD")) {
     $tmp['url'] = $data->url;
     $tmp['web'] = $data->web;
     if($tmp['versionstring'] == "") { $tmp['versionstring'] = OC_Util::getVersionString(); }
-    $ocs['OwnCloud']['remote'] = $tmp['versionstring'];
+    $ocs['OwnCloud']['remote'] = $tmp['versionstring'];*/
+    
+    
 
     $json_version[] = $ocs;
 }
@@ -61,7 +79,7 @@ if(defined("PHPSYSINFO")) {
     $phpsysinfo['phpSysInfo']['local'] = "0";
     $phpsysinfo['phpSysInfo']['remote'] = "0";
     
-    $handle = fopen(PHPSYSINFO."/includes/class.CommonFunctions.inc.php", "rb");
+    $handle = fopen(PHPSYSINFO."/includes/class.CommonFunctions.inc.php", "r");
     if($handle) {
         $contents = '';
         while (!feof($handle)) { $contents .= fread($handle, 8192); }
@@ -90,7 +108,7 @@ if(defined("PHPSYSINFO")) {
     //$phpsysinfo['phpSysInfo']['remote'] = $output;
 
     //get latest file for master branch on git
-    $psi_file = file_get_contents("https://raw.github.com/rk4an/phpsysinfo/master/config.php");
+    $psi_file = file_get_contents("https://raw.github.com/rk4an/phpsysinfo/stable/config.php");
     if($psi_file) {
         preg_match("/define\('PSI_VERSION','(.*)'\);/", $psi_file, $matches);
         $phpsysinfo['phpSysInfo']['remote'] = $matches[1];
@@ -103,7 +121,7 @@ if(defined("MEDIAWIKI")) {
     $mediawiki['MediaWiki']['local'] = "0";
     $mediawiki['MediaWiki']['remote'] = "0";
     
-    $handle = fopen(MEDIAWIKI."/includes/DefaultSettings.php", "rb");
+    $handle = fopen(MEDIAWIKI."/includes/DefaultSettings.php", "r");
     if($handle) {
         $contents = '';
         while (!feof($handle)) { $contents .= fread($handle, 8192); }
@@ -123,7 +141,7 @@ if(defined("DOKUWIKI")) {
     $dokuwiki['Dokuwiki']['local'] = "0";
     $dokuwiki['Dokuwiki']['remote'] = "0";
     
-    $handle = fopen(DOKUWIKI."/VERSION", "rb");
+    $handle = fopen(DOKUWIKI."/VERSION", "r");
     if($handle) {
         $contents = '';
         while (!feof($handle)) { $contents .= fread($handle, 8192);}
@@ -144,7 +162,7 @@ if(defined("PHPMYADMIN")) {
     $pma['phpMyAdmin']['local'] = "0";
     $pma['phpMyAdmin']['remote'] = "0";
 
-    $handle = fopen(PHPMYADMIN."/libraries/Config.class.php", "rb");
+    $handle = fopen(PHPMYADMIN."/libraries/Config.class.php", "r");
     if($handle) {
         $contents = '';
         while (!feof($handle)) { $contents .= fread($handle, 8192);}
@@ -167,7 +185,7 @@ if(defined("WORDPRESS")) {
     $wordpress['Wordpress']['local'] = "0";
     $wordpress['Wordpress']['remote'] = "0";
     
-    $handle = fopen(WORDPRESS."/wp-includes/version.php", "rb");
+    $handle = fopen(WORDPRESS."/wp-includes/version.php", "r");
     if($handle) {
         $contents = '';
         while (!feof($handle)) { $contents .= fread($handle, 8192);}
@@ -190,7 +208,7 @@ if(defined("DOTCLEAR")) {
     $dotclear['Dotclear']['local'] = "0";
     $dotclear['Dotclear']['remote'] = "0";
     
-    $handle = fopen(DOTCLEAR."/inc/prepend.php", "rb");
+    $handle = fopen(DOTCLEAR."/inc/prepend.php", "r");
     if($handle) {
         $contents = '';
         while (!feof($handle)) { $contents .= fread($handle, 8192);}
@@ -214,7 +232,7 @@ if(defined("GITLAB")) {
     $gitlab['Gitlab']['local'] = "0";
     $gitlab['Gitlab']['remote'] = "0";
     
-    $handle = fopen(GITLAB."/VERSION", "rb");
+    $handle = fopen(GITLAB."/VERSION", "r");
     if($handle) {
         $contents = '';
         while (!feof($handle)) { $contents .= fread($handle, 8192);}
@@ -233,7 +251,7 @@ if(defined("GITLAB")) {
 
 $checker['Checker']['local'] = "0";
 $checker['Checker']['remote'] = "0";
-$handle = fopen("VERSION", "rb");
+$handle = fopen("VERSION", "r");
 if($handle) {
     $contents = '';
     while (!feof($handle)) { $contents .= fread($handle, 8192);}
