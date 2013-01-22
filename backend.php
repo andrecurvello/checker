@@ -90,7 +90,7 @@ if(defined("PHPSYSINFO")) {
     //$phpsysinfo['phpSysInfo']['remote'] = $output;
 
     //get latest file for master branch on git
-    $psi_file = file_get_contents("https://raw.github.com/rk4an/phpsysinfo/master/config.php");
+    $psi_file = file_get_contents("https://raw.github.com/rk4an/phpsysinfo/stable/config.php");
     if($psi_file) {
         preg_match("/define\('PSI_VERSION','(.*)'\);/", $psi_file, $matches);
         $phpsysinfo['phpSysInfo']['remote'] = $matches[1];
