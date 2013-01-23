@@ -253,7 +253,7 @@ if(defined("SYMFONY")) {
     $sf['Symfony']['local'] = "0";
     $sf['Symfony']['remote'] = "0";
 
-    $handle = fopen(SYMFONY."/include/constants.php", "r");
+    $handle = fopen(SYMFONY."/Component/HttpKernel/Kernel.php", "r");
     if($handle) {
         $contents = '';
         while (!feof($handle)) { $contents .= fread($handle, 8192);}
