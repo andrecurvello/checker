@@ -249,6 +249,30 @@ if(defined("GITLAB")) {
     $json_version[] = $gitlab;
 }
 
+if(defined("SYMFONY")) {
+    $sf['Symfony']['local'] = "0";
+    $sf['Symfony']['remote'] = "0";
+
+    $handle = fopen(SYMFONY."/include/constants.php", "r");
+    if($handle) {
+        $contents = '';
+        while (!feof($handle)) { $contents .= fread($handle, 8192);}
+        fclose($handle);
+
+        preg_match("/const VERSION         = '(.*)';/", $contents, $matches);
+        $sf['Symfony']['local'] = $matches[1];
+    }
+
+    $result = file_get_contents("https://raw.github.com/symfony/symfony/2.1/src/Symfony/Component/HttpKernel/Kernel.php");
+    if($result) {
+        preg_match("/const VERSION         = '(.*)';/", $result, $matches);
+        $sf['Symfony']['remote'] = $matches[1];
+
+    }
+
+    $json_version[] = $sf;
+}
+
 $checker['Checker']['local'] = "0";
 $checker['Checker']['remote'] = "0";
 $handle = fopen("VERSION", "r");
