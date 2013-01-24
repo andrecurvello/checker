@@ -38,7 +38,7 @@ if(defined("OWNCLOUD")) {
         while (!feof($handle)) { $contents .= fread($handle, 8192);}
         fclose($handle);
         
-        preg_match("/getVersionString\(\) {\n		return '(.*)';/", $contents, $matches);
+        preg_match("/getVersionString\(\) {\n    	return '(.*)';/", $contents, $matches);
         $ocs['OwnCloud']['local'] = $matches[1];
     }
     
@@ -263,11 +263,10 @@ if(defined("SYMFONY")) {
         $sf['Symfony']['local'] = $matches[1];
     }
 
-    $result = file_get_contents("https://raw.github.com/symfony/symfony/2.1/src/Symfony/Component/HttpKernel/Kernel.php");
+    $result = file_get_contents("https://raw.github.com/symfony/symfony-standard/2.1/composer.lock");
     if($result) {
-        preg_match("/const VERSION         = '(.*)';/", $result, $matches);
+        preg_match("/https\:\/\/github.com\/symfony\/symfony\/archive\/v(.*).zip/", $result, $matches);
         $sf['Symfony']['remote'] = $matches[1];
-
     }
 
     $json_version[] = $sf;
