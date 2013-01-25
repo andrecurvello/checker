@@ -253,20 +253,19 @@ if(defined("SYMFONY")) {
     $sf['Symfony']['local'] = "0";
     $sf['Symfony']['remote'] = "0";
 
-    $handle = fopen(SYMFONY."/Component/HttpKernel/Kernel.php", "r");
+    $handle = fopen(SYMFONY."/composer.lock", "r");
     if($handle) {
         $contents = '';
         while (!feof($handle)) { $contents .= fread($handle, 8192);}
         fclose($handle);
-
-        preg_match("/const VERSION         = '(.*)';/", $contents, $matches);
-        $sf['Symfony']['local'] = $matches[1];
+        preg_match('/"name": "symfony\/symfony",'."\n".'(.*)"version": "v(.*)",/', $contents, $matches);
+        $sf['Symfony']['local'] = $matches[2];
     }
 
     $result = file_get_contents("https://raw.github.com/symfony/symfony-standard/2.1/composer.lock");
     if($result) {
-        preg_match("/https\:\/\/github.com\/symfony\/symfony\/archive\/v(.*).zip/", $result, $matches);
-        $sf['Symfony']['remote'] = $matches[1];
+        preg_match('/"name": "symfony\/symfony",'."\n".'(.*)"version": "v(.*)",/', $result, $matches);
+        $sf['Symfony']['remote'] = $matches[2];
     }
 
     $json_version[] = $sf;
