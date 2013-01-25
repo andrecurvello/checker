@@ -38,14 +38,14 @@ if(defined("OWNCLOUD")) {
         while (!feof($handle)) { $contents .= fread($handle, 8192);}
         fclose($handle);
         
-        preg_match("/getVersionString\(\) {\n    	return '(.*)';/", $contents, $matches);
-        $ocs['OwnCloud']['local'] = $matches[1];
+        preg_match("/getVersionString\(\) {\n(.*)return '(.*)';/", $contents, $matches);
+        $ocs['OwnCloud']['local'] = $matches[2];
     }
     
     $ocs_latest = file_get_contents("https://raw.github.com/owncloud/core/stable45/lib/util.php");
     if($ocs_latest) {
-        preg_match("/getVersionString\(\) {\n		return '(.*)';/", $ocs_latest, $matches);
-        $ocs['OwnCloud']['remote'] = $matches[1];
+        preg_match("/getVersionString\(\) {\n(.*)return '(.*)';/", $ocs_latest, $matches);
+        $ocs['OwnCloud']['remote'] = $matches[2];
     }
     
     /*include(OWNCLOUD."/lib/util.php");
