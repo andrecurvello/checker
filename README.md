@@ -14,4 +14,5 @@ Supported apps:
  * Wordpress
  * Dotclear
  * Gitlab
+ * Symfony2
  * Checker
