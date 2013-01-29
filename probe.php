@@ -2,7 +2,7 @@
 
 $json_version = array();
 
-require_once("config.php");
+require_once("config_probe.php");
 
 if(defined("PIWIGO")) {
     $piwigo['Piwigo']['local'] = "0";

@@ -74,19 +74,24 @@
     
     });    
         
- 
     $("#loader").ajaxStart(function(){
         $(this).show();
     });
     $("#loader").ajaxStop(function(){
         $(this).hide();
     });     
-        
+    
+    
+    <?php 
+    include('config.php');
+    foreach ($servers as $key => $value) {
+    ?>
+    
     $.ajax({
         type: "GET",
         cache: false,
         dataType: "text",
-        url: "backend.php",
+        url: "call_probe.php?server=<?php echo $value ?>",
         success: function (data) {
         
             json_version = JSON.parse(data);
@@ -102,6 +107,7 @@
                     else {
                         var label = "label-warning";
                     }
+                   
                     $("#tbl_content").append("<tr>"+
                     "<td>"+app+"</td>"+
                     "<td><span class=\"label "+label+"\">"+version["local"]+"</span></td>"+
@@ -114,6 +120,8 @@
             console.log("error");
         }
     });
+
+    <?php } ?>
 
     </script>
 
