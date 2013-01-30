@@ -282,7 +282,7 @@ if($handle) {
     $checker['Checker']['local'] = $contents;
 }
 
-$checker_file = file_get_contents("https://raw.github.com/rk4an/checker/master/VERSION");
+$checker_file = file_get_contents("https://raw.github.com/rk4an/checker/master/probe/VERSION");
 if($checker_file) {
     $checker['Checker']['remote'] = $checker_file;
 }

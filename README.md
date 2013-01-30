@@ -3,6 +3,9 @@ Checker
 
 **Keep your web apps up-to-date**
 
+Features:
+ * Multiple servers support
+
 Supported apps:
 
  * Piwigo

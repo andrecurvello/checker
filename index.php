@@ -72,13 +72,13 @@
         
     $(document).ready(function(){
     
-    });    
-        
-    $("#loader").ajaxStart(function(){
-        $(this).show();
     });
-    $("#loader").ajaxStop(function(){
-        $(this).hide();
+        
+    $(document).ajaxStart(function(){
+        $("#loader").show();
+    });
+    $(document).ajaxStop(function(){
+        $("#loader").hide();
     });     
     
     
