@@ -1,6 +1,8 @@
 Checker
 =========================
 
+[![Build Status](https://travis-ci.org/rk4an/checker.png?branch=dev)](https://travis-ci.org/rk4an/checker)
+
 **Keep your web apps up-to-date**
 
 Features:
