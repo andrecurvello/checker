@@ -115,6 +115,8 @@ function check_phpsysinfo_remote(){
 function check_mediawiki_local(){
     $file = MEDIAWIKI."/includes/DefaultSettings.php";
     
+    if(!file_exists($file)) return "0";
+    
     $handle = fopen($file, "r");
     if($handle) {
         $contents = '';
