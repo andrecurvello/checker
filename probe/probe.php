@@ -216,6 +216,91 @@ function check_checker_remote(){
     return "0";
 }
 
+function check_dotclear_local(){
+    $file = DOTCLEAR."/inc/prepend.php";
+    
+    if(!file_exists($file)) return "0";
+    
+    $handle = fopen($file, "r");
+    if($handle) {
+        $contents = '';
+        while (!feof($handle)) { $contents .= fread($handle, 8192);}
+        fclose($handle);
+
+        if(preg_match("/define\('DC_VERSION','(.*)'\);/", $contents, $matches))
+            return $matches[1];
+        else
+            return "0";
+    }
+    return "0";
+}
+
+function check_dotclear_remote(){
+    $contents = file_get_contents("http://download.dotclear.org/versions.xml");
+    
+    if($contents) {
+        if(preg_match("/name=\"stable\" version=\"(.*)\"/", $contents, $matches))
+            return $matches[1];
+        else
+            return "0";
+    }
+    return "0";
+}
+
+
+function check_gitlab_local(){
+    $file = GITLAB."/VERSION";
+    
+    if(!file_exists($file)) return "0";
+    
+    $handle = fopen($file, "r");
+    if($handle) {
+        $contents = '';
+        while (!feof($handle)) { $contents .= fread($handle, 8192);}
+        fclose($handle);
+        
+        return $contents;
+    }
+    return "0";
+}
+
+function check_gitlab_remote(){
+    $contents = file_get_contents("https://raw.github.com/gitlabhq/gitlabhq/stable/VERSION");
+    if($contents) {
+        return $contents;
+    }
+    return "0";
+}
+
+
+function check_symfony_local(){
+    $file = SYMFONY."/composer.lock";
+    
+    if(!file_exists($file)) return "0";
+    
+    $handle = fopen($file, "r");
+    if($handle) {
+        $contents = '';
+        while (!feof($handle)) { $contents .= fread($handle, 8192);}
+        fclose($handle);
+        if(preg_match('/"name": "symfony\/symfony",'."\n".'(.*)"version": "v(.*)",/', $contents, $matches))
+            return $matches[2];
+        else
+            return "0";
+    }
+    return "0";
+}
+
+function check_symfony_remote(){
+    $result = file_get_contents("https://raw.github.com/symfony/symfony-standard/2.1/composer.lock");
+    if($result) {
+        if(preg_match('/"name": "symfony\/symfony",'."\n".'(.*)"version": "v(.*)",/', $result, $matches))
+            return $matches[2];
+        else
+            return "0";
+    }
+    return "0";
+}
 
 function check_wordpress_local(){
     $file = WORDPRESS."/wp-includes/version.php";
@@ -289,69 +374,20 @@ if(defined("WORDPRESS")) {
 }
 
 if(defined("DOTCLEAR")) {
-    $dotclear['Dotclear']['local'] = "0";
-    $dotclear['Dotclear']['remote'] = "0";
-    
-    $handle = fopen(DOTCLEAR."/inc/prepend.php", "r");
-    if($handle) {
-        $contents = '';
-        while (!feof($handle)) { $contents .= fread($handle, 8192);}
-        fclose($handle);
-
-        preg_match("/define\('DC_VERSION','(.*)'\);/", $contents, $matches);
-        $dotclear['Dotclear']['local'] = $matches[1];
-    }
-    
-    $contents = file_get_contents("http://download.dotclear.org/versions.xml");
-    
-    if($contents) {
-        preg_match("/name=\"stable\" version=\"(.*)\"/", $contents, $matches);
-        $dotclear['Dotclear']['remote'] = $matches[1];
-    }
-
+    $dotclear['Dotclear']['local'] = check_dotclear_local();
+    $dotclear['Dotclear']['remote'] = check_dotclear_remote();
     $json_version[] = $dotclear;
 }
 
 if(defined("GITLAB")) {
-    $gitlab['Gitlab']['local'] = "0";
-    $gitlab['Gitlab']['remote'] = "0";
-    
-    $handle = fopen(GITLAB."/VERSION", "r");
-    if($handle) {
-        $contents = '';
-        while (!feof($handle)) { $contents .= fread($handle, 8192);}
-        fclose($handle);
-        
-        $gitlab['Gitlab']['local'] = $contents;
-    }
-
-    $contents = file_get_contents("https://raw.github.com/gitlabhq/gitlabhq/stable/VERSION");
-    if($contents) {
-        $gitlab['Gitlab']['remote'] = $contents;
-    }
-
+    $gitlab['Gitlab']['local'] = check_gitlab_local();
+    $gitlab['Gitlab']['remote'] = check_gitlab_remote();
     $json_version[] = $gitlab;
 }
 
 if(defined("SYMFONY")) {
-    $sf['Symfony']['local'] = "0";
-    $sf['Symfony']['remote'] = "0";
-
-    $handle = fopen(SYMFONY."/composer.lock", "r");
-    if($handle) {
-        $contents = '';
-        while (!feof($handle)) { $contents .= fread($handle, 8192);}
-        fclose($handle);
-        preg_match('/"name": "symfony\/symfony",'."\n".'(.*)"version": "v(.*)",/', $contents, $matches);
-        $sf['Symfony']['local'] = $matches[2];
-    }
-
-    $result = file_get_contents("https://raw.github.com/symfony/symfony-standard/2.1/composer.lock");
-    if($result) {
-        preg_match('/"name": "symfony\/symfony",'."\n".'(.*)"version": "v(.*)",/', $result, $matches);
-        $sf['Symfony']['remote'] = $matches[2];
-    }
-
+    $sf['Symfony']['local'] = check_symfony_local();
+    $sf['Symfony']['remote'] = check_symfony_remote();
     $json_version[] = $sf;
 }
 
