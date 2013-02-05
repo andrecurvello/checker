@@ -138,6 +138,113 @@ function check_mediawiki_remote(){
     return $output[0];
 }
 
+function check_dokuwiki_local(){
+    
+    $file = DOKUWIKI."/VERSION";
+    
+    if(!file_exists($file)) return "0";
+    
+    $handle = fopen($file, "r");
+    if($handle) {
+        $contents = '';
+        while (!feof($handle)) { $contents .= fread($handle, 8192);}
+        fclose($handle);
+        
+        return $contents;
+    }
+    return "0";
+}
+
+function check_dokuwiki_remote(){
+    $dokuwiki_file = file_get_contents("https://raw.github.com/splitbrain/dokuwiki/stable/VERSION");
+    if($dokuwiki_file) {
+        return $dokuwiki_file;
+    }
+    return "0";
+}
+
+function check_phpmyadmin_local(){
+    
+    $file = PHPMYADMIN."/libraries/Config.class.php";
+    
+    if(!file_exists($file)) return "0";
+    
+    $handle = fopen( $file, "r");
+    if($handle) {
+        $contents = '';
+        while (!feof($handle)) { $contents .= fread($handle, 8192);}
+        fclose($handle);
+        
+        if(preg_match("/this->set\('PMA_VERSION', '(.*)'\);/", $contents, $matches))
+            return $matches[1];
+        else
+            return "0";
+    }
+    return "0";
+}
+
+function check_phpmyadmin_remote(){
+    $pma_latest = file_get_contents("http://www.phpmyadmin.net/home_page/version.js");
+    if($pma_latest) {
+        preg_match("/PMA_latest_version = '(.*)'/", $pma_latest, $matches);
+        return $matches[1];
+    }
+    return "0";
+}
+
+function check_checker_local(){
+    $file = "VERSION";
+    
+    if(!file_exists($file)) return "0";
+    
+    $handle = fopen($file , "r");
+    if($handle) {
+        $contents = '';
+        while (!feof($handle)) { $contents .= fread($handle, 8192);}
+        fclose($handle);
+        
+        return $contents;
+    }
+    return "0";
+}
+
+function check_checker_remote(){
+    $checker_file = file_get_contents("https://raw.github.com/rk4an/checker/dev/probe/VERSION");
+    if($checker_file) {
+        return $checker_file;
+    }
+    return "0";
+}
+
+
+function check_wordpress_local(){
+    $file = WORDPRESS."/wp-includes/version.php";
+    
+    if(!file_exists($file)) return "0";
+    
+    $handle = fopen($file, "r");
+    if($handle) {
+        $contents = '';
+        while (!feof($handle)) { $contents .= fread($handle, 8192);}
+        fclose($handle);
+        
+        if(preg_match("/wp_version = '(.*)';/", $contents, $matches))
+            return $matches[1];
+        else
+            return "0";
+    }
+    return "0";
+}
+
+function check_wordpress_remote(){
+    $wordpress_latest = file_get_contents("http://api.wordpress.org/core/version-check/1.6/");
+    if($wordpress_latest) {
+        $wordpress_array = unserialize($wordpress_latest);
+        return $wordpress_array['offers'][0]['current'];
+    }
+    return "0";
+}
+
 if(defined("PIWIGO")) {
     $piwigo['Piwigo']['local'] = check_piwigo_local();
     $piwigo['Piwigo']['remote'] = check_piwigo_remote();
@@ -156,8 +263,6 @@ if(defined("PHPSYSINFO")) {
     $json_version[] = $phpsysinfo;
 }
 
-
-
 if(defined("MEDIAWIKI")) {
     $mediawiki['MediaWiki']['local'] = check_mediawiki_local();
     $mediawiki['MediaWiki']['remote'] = check_mediawiki_remote();
@@ -165,69 +270,21 @@ if(defined("MEDIAWIKI")) {
 }
 
 if(defined("DOKUWIKI")) {
-    $dokuwiki['Dokuwiki']['local'] = "0";
-    $dokuwiki['Dokuwiki']['remote'] = "0";
+    $dokuwiki['Dokuwiki']['local'] = check_dokuwiki_local();
+    $dokuwiki['Dokuwiki']['remote'] = check_dokuwiki_remote();
     
-    $handle = fopen(DOKUWIKI."/VERSION", "r");
-    if($handle) {
-        $contents = '';
-        while (!feof($handle)) { $contents .= fread($handle, 8192);}
-        fclose($handle);
-        
-        $dokuwiki['Dokuwiki']['local'] = $contents;
-    }
-
-    $dokuwiki_file = file_get_contents("https://raw.github.com/splitbrain/dokuwiki/stable/VERSION");
-    if($dokuwiki_file) {
-        $dokuwiki['Dokuwiki']['remote'] = $dokuwiki_file;
-    }
-
     $json_version[] = $dokuwiki;
 }
 
 if(defined("PHPMYADMIN")) {
-    $pma['phpMyAdmin']['local'] = "0";
-    $pma['phpMyAdmin']['remote'] = "0";
-
-    $handle = fopen(PHPMYADMIN."/libraries/Config.class.php", "r");
-    if($handle) {
-        $contents = '';
-        while (!feof($handle)) { $contents .= fread($handle, 8192);}
-        fclose($handle);
-        
-        preg_match("/this->set\('PMA_VERSION', '(.*)'\);/", $contents, $matches);
-        $pma['phpMyAdmin']['local'] = $matches[1];
-    }
-
-    $pma_latest = file_get_contents("http://www.phpmyadmin.net/home_page/version.js");
-    if($pma_latest) {
-        preg_match("/PMA_latest_version = '(.*)'/", $pma_latest, $matches);
-        $pma['phpMyAdmin']['remote'] = $matches[1];
-    }
-
+    $pma['phpMyAdmin']['local'] = check_phpmyadmin_local();
+    $pma['phpMyAdmin']['remote'] = check_phpmyadmin_remote();
     $json_version[] = $pma;
 }
 
 if(defined("WORDPRESS")) {
-    $wordpress['Wordpress']['local'] = "0";
-    $wordpress['Wordpress']['remote'] = "0";
-    
-    $handle = fopen(WORDPRESS."/wp-includes/version.php", "r");
-    if($handle) {
-        $contents = '';
-        while (!feof($handle)) { $contents .= fread($handle, 8192);}
-        fclose($handle);
-        
-        preg_match("/wp_version = '(.*)';/", $contents, $matches);
-        $wordpress['Wordpress']['local'] = $matches[1];
-    }
-
-    $wordpress_latest = file_get_contents("http://api.wordpress.org/core/version-check/1.6/");
-    if($wordpress_latest) {
-        $wordpress_array = unserialize($wordpress_latest);
-        $wordpress['Wordpress']['remote'] = $wordpress_array['offers'][0]['current'];
-    }
-
+    $wordpress['Wordpress']['local'] = check_wordpress_local();
+    $wordpress['Wordpress']['remote'] = check_wordpress_remote();
     $json_version[] = $wordpress;
 }
 
@@ -298,21 +355,8 @@ if(defined("SYMFONY")) {
     $json_version[] = $sf;
 }
 
-$checker['Checker']['local'] = "0";
-$checker['Checker']['remote'] = "0";
-$handle = fopen("VERSION", "r");
-if($handle) {
-    $contents = '';
-    while (!feof($handle)) { $contents .= fread($handle, 8192);}
-    fclose($handle);
-    
-    $checker['Checker']['local'] = $contents;
-}
-
-$checker_file = file_get_contents("https://raw.github.com/rk4an/checker/master/probe/VERSION");
-if($checker_file) {
-    $checker['Checker']['remote'] = $checker_file;
-}
+$checker['Checker']['local'] = check_checker_local();
+$checker['Checker']['remote'] = check_checker_remote();
 $json_version[] = $checker;
 
 echo json_encode($json_version);
