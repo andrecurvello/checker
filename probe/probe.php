@@ -126,6 +126,7 @@ function check_mediawiki_local(){
         else
             return "0";
     }
+    return "0";
 }
 
 function check_mediawiki_remote(){
