@@ -131,8 +131,13 @@ if(defined("MEDIAWIKI")) {
         $mediawiki['MediaWiki']['local'] = $matches[1];
     }
 
-    exec("git ls-remote --tags https://gerrit.wikimedia.org/r/p/mediawiki/core.git | cut  -f2 | tr -d 'refs/tags/' | sort -r --version-sort --field-separator=. -k2 | head -n 1", $output);
-    $mediawiki['MediaWiki']['remote'] = $output;
+    /**
+     * The default ls in OS X does not have version sort capabilities 
+     *
+     * exec("git ls-remote --tags https://gerrit.wikimedia.org/r/p/mediawiki/core.git | cut  -f2 | tr -d 'refs/tags/' | sort -r --version-sort --field-separator=. -k2 | head -n 1", $output);
+     */
+    exec("git ls-remote --tags https://gerrit.wikimedia.org/r/p/mediawiki/core.git | cut  -f2 | tr -d 'refs/tags/' | sort -t. -k 1,1nr -k 2,2nr -k 3,3nr -k 4,4nr | head -n 1", $output);
+    $mediawiki['MediaWiki']['remote'] = $output[0];
 
     $json_version[] = $mediawiki;
 }
