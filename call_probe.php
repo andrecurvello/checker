@@ -2,7 +2,7 @@
 
 $url = $_GET['server'];
 
-/*$headers = array(
+/**$headers = array(
     'Accept: application/json',
     'Content-Type: application/json',
 );
@@ -12,7 +12,7 @@ $data = json_encode($_POST);
 
 $handle = curl_init();
 curl_setopt($handle, CURLOPT_URL, $url);
-curl_setopt($handle, CURLOPT_HTTPHEADER, $headers);
+//curl_setopt($handle, CURLOPT_HTTPHEADER, $headers);
 curl_setopt($handle, CURLOPT_RETURNTRANSFER, true);
 
 curl_setopt($handle, CURLOPT_HEADER, false);
