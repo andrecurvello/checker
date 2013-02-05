@@ -15,9 +15,10 @@ function check_piwigo_local(){
         while (!feof($handle)) { $contents .= fread($handle, 8192);}
         fclose($handle);
         
-        preg_match("/define\('PHPWG_VERSION', '(.*)'\);/", $contents, $matches);
-        
-        return $matches[1];
+        if(preg_match("/define\('PHPWG_VERSION', '(.*)'\);/", $contents, $matches))
+            return $matches[1];
+        else
+            return "0";
     }
     return "0";
 }
@@ -44,8 +45,10 @@ function check_owncloud_local(){
         while (!feof($handle)) { $contents .= fread($handle, 8192);}
         fclose($handle);
         
-        preg_match("/getVersionString\(\) {\n(.*)return '(.*)';/", $contents, $matches);
-        return $matches[2];
+        if(preg_match("/getVersionString\(\) {\n(.*)return '(.*)';/", $contents, $matches))
+            return $matches[2];
+        else
+            return "0";
     }
     
     return "0";
@@ -54,9 +57,12 @@ function check_owncloud_local(){
 function check_owncloud_remote(){
     $ocs_latest = file_get_contents("https://raw.github.com/owncloud/core/stable45/lib/util.php");
     if($ocs_latest) {
-        preg_match("/getVersionString\(\) {\n(.*)return '(.*)';/", $ocs_latest, $matches);
-        return $matches[2];
+        if(preg_match("/getVersionString\(\) {\n(.*)return '(.*)';/", $ocs_latest, $matches))
+            return $matches[2];
+        else
+            return "0";
     }
+    return "0";
 }
     
 function check_phpsysinfo_local(){
@@ -70,8 +76,8 @@ function check_phpsysinfo_local(){
             while (!feof($handle)) { $contents .= fread($handle, 8192); }
             fclose($handle);
             
-            preg_match("/const PSI_VERSION = '(.*)'/", $contents, $matches);
-            return $matches[1];
+            if(preg_match("/const PSI_VERSION = '(.*)'/", $contents, $matches))
+                return $matches[1];
         }
     }
     
@@ -84,8 +90,10 @@ function check_phpsysinfo_local(){
             while (!feof($handle)) { $contents .= fread($handle, 8192); }
             fclose($handle);
             
-            preg_match("/define\('PSI_VERSION','(.*)'\);/", $contents, $matches);
-            return $matches[1];
+            if(preg_match("/define\('PSI_VERSION','(.*)'\);/", $contents, $matches))
+                return $matches[1];
+            else 
+                return "0";
         }
     }
     
@@ -95,10 +103,39 @@ function check_phpsysinfo_local(){
 function check_phpsysinfo_remote(){
     $psi_file = file_get_contents("https://raw.github.com/rk4an/phpsysinfo/stable/config.php");
     if($psi_file) {
-        preg_match("/define\('PSI_VERSION','(.*)'\);/", $psi_file, $matches);
-        return $matches[1];
+        if(preg_match("/define\('PSI_VERSION','(.*)'\);/", $psi_file, $matches))
+            return $matches[1];
+        else
+            return "0";
     }
     return "0";
+}
+
+
+function check_mediawiki_local(){
+    $file = MEDIAWIKI."/includes/DefaultSettings.php";
+    
+    $handle = fopen($file, "r");
+    if($handle) {
+        $contents = '';
+        while (!feof($handle)) { $contents .= fread($handle, 8192); }
+        fclose($handle);
+        
+        if(preg_match("/wgVersion = '(.*)'/", $contents, $matches))
+            return $matches[1];
+        else
+            return "0";
+    }
+}
+
+function check_mediawiki_remote(){
+    /**
+     * The default ls in OS X does not have version sort capabilities 
+     *
+     * exec("git ls-remote --tags https://gerrit.wikimedia.org/r/p/mediawiki/core.git | cut  -f2 | tr -d 'refs/tags/' | sort -r --version-sort --field-separator=. -k2 | head -n 1", $output);
+     */
+    exec("git ls-remote --tags https://gerrit.wikimedia.org/r/p/mediawiki/core.git | cut  -f2 | tr -d 'refs/tags/' | sort -t. -k 1,1nr -k 2,2nr -k 3,3nr -k 4,4nr | head -n 1", $output);
+    return $output[0];
 }
 
 if(defined("PIWIGO")) {
@@ -119,28 +156,11 @@ if(defined("PHPSYSINFO")) {
     $json_version[] = $phpsysinfo;
 }
 
+
+
 if(defined("MEDIAWIKI")) {
-    $mediawiki['MediaWiki']['local'] = "0";
-    $mediawiki['MediaWiki']['remote'] = "0";
-    
-    $handle = fopen(MEDIAWIKI."/includes/DefaultSettings.php", "r");
-    if($handle) {
-        $contents = '';
-        while (!feof($handle)) { $contents .= fread($handle, 8192); }
-        fclose($handle);
-        
-        preg_match("/wgVersion = '(.*)'/", $contents, $matches);
-        $mediawiki['MediaWiki']['local'] = $matches[1];
-    }
-
-    /**
-     * The default ls in OS X does not have version sort capabilities 
-     *
-     * exec("git ls-remote --tags https://gerrit.wikimedia.org/r/p/mediawiki/core.git | cut  -f2 | tr -d 'refs/tags/' | sort -r --version-sort --field-separator=. -k2 | head -n 1", $output);
-     */
-    exec("git ls-remote --tags https://gerrit.wikimedia.org/r/p/mediawiki/core.git | cut  -f2 | tr -d 'refs/tags/' | sort -t. -k 1,1nr -k 2,2nr -k 3,3nr -k 4,4nr | head -n 1", $output);
-    $mediawiki['MediaWiki']['remote'] = $output[0];
-
+    $mediawiki['MediaWiki']['local'] = check_mediawiki_local();
+    $mediawiki['MediaWiki']['remote'] = check_mediawiki_remote();
     $json_version[] = $mediawiki;
 }
 
