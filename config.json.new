@@ -1,0 +1,9 @@
+{
+    "server" : 
+    [
+        "http://localhost/~aline/develle/checker/probe/probe.php",
+        "http://exponet.u-strasbg.fr/~erkan/checker-dev/probe/probe.php"
+    ]
+}
+
+
