@@ -1,0 +1,8 @@
+<?php
+
+$servers = array(
+    "localhost" => "http://localhost/~erkan/checker-dev/probe/probe.php",
+    //"server2" => "http://localhost2/~user/checker/probe/probe.php",
+);
+
+?>
