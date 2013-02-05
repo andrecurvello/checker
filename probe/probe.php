@@ -4,116 +4,118 @@ $json_version = array();
 
 require_once("config_probe.php");
 
-if(defined("PIWIGO")) {
-    $piwigo['Piwigo']['local'] = "0";
-    $piwigo['Piwigo']['remote'] = "0";
+function check_piwigo_local(){
+    $file = PIWIGO."/include/constants.php";
     
-    $handle = fopen(PIWIGO."/include/constants.php", "r");
+    if(!file_exists($file)) return "0";
+    
+    $handle = fopen($file, "r");
     if($handle) {
         $contents = '';
         while (!feof($handle)) { $contents .= fread($handle, 8192);}
         fclose($handle);
         
         preg_match("/define\('PHPWG_VERSION', '(.*)'\);/", $contents, $matches);
-        $piwigo['Piwigo']['local'] = $matches[1];
+        
+        return $matches[1];
     }
+    return "0";
+}
 
+function check_piwigo_remote(){
     $result = file_get_contents("http://piwigo.org/download/all_versions.php");
     if($result) {
         $all_piwigo_versions = @explode("\n", $result);
         $new_piwigo_version = trim($all_piwigo_versions[0]);
-        $piwigo['Piwigo']['remote'] = $new_piwigo_version;
+        return $new_piwigo_version;
     }
-
-    $json_version[] = $piwigo;
+    return "0";
 }
 
-if(defined("OWNCLOUD")) {
-    $ocs['OwnCloud']['local'] = "0";
-    $ocs['OwnCloud']['remote'] = "0";
+function check_owncloud_local(){
     
-    $handle = fopen(OWNCLOUD."/lib/util.php", "r");
+    $file = OWNCLOUD."/lib/util.php";
+    
+    if(!file_exists($file)) return "0";
+    
+    $handle = fopen($file, "r");
     if($handle) {
         $contents = '';
         while (!feof($handle)) { $contents .= fread($handle, 8192);}
         fclose($handle);
         
         preg_match("/getVersionString\(\) {\n(.*)return '(.*)';/", $contents, $matches);
-        $ocs['OwnCloud']['local'] = $matches[2];
+        return $matches[2];
     }
     
+    return "0";
+}
+
+function check_owncloud_remote(){
     $ocs_latest = file_get_contents("https://raw.github.com/owncloud/core/stable45/lib/util.php");
     if($ocs_latest) {
         preg_match("/getVersionString\(\) {\n(.*)return '(.*)';/", $ocs_latest, $matches);
-        $ocs['OwnCloud']['remote'] = $matches[2];
+        return $matches[2];
     }
-    
-    /*include(OWNCLOUD."/lib/util.php");
-    $ocs['OwnCloud']['local'] = OC_Util::getVersionString();
-    
-    $updaterurl='http://apps.owncloud.com/updater.php';
-    $version = OC_Util::getVersion();
-    $version['installed'] = '';
-    $version['updated'] = '';
-    $version['updatechannel'] = 'stable';
-    $version['edition'] = "";
-    $versionstring = implode('x',$version);
-    $url = $updaterurl.'?version='.$versionstring;
-    $ctx = stream_context_create(array( 'http' => array( 'timeout' => 10 )) ); 
-    $xml = @file_get_contents($url, 0, $ctx);
-    $data = @simplexml_load_string($xml);
-    $tmp = array();
-    $tmp['version'] = $data->version;
-    $tmp['versionstring'] = $data->versionstring;
-    $tmp['url'] = $data->url;
-    $tmp['web'] = $data->web;
-    if($tmp['versionstring'] == "") { $tmp['versionstring'] = OC_Util::getVersionString(); }
-    $ocs['OwnCloud']['remote'] = $tmp['versionstring'];*/
-    
-    
-
-    $json_version[] = $ocs;
 }
-
-if(defined("PHPSYSINFO")) {
-    $phpsysinfo['phpSysInfo']['local'] = "0";
-    $phpsysinfo['phpSysInfo']['remote'] = "0";
     
-    $handle = fopen(PHPSYSINFO."/includes/class.CommonFunctions.inc.php", "r");
-    if($handle) {
-        $contents = '';
-        while (!feof($handle)) { $contents .= fread($handle, 8192); }
-        fclose($handle);
-        
-        preg_match("/const PSI_VERSION = '(.*)'/", $contents, $matches);
-        $phpsysinfo['phpSysInfo']['local'] = $matches[1];
+function check_phpsysinfo_local(){
+    
+    $file = PHPSYSINFO."/includes/class.CommonFunctions.inc.php";
+    
+    if(file_exists($file)) {
+        $handle = fopen($file, "r");
+        if($handle) {
+            $contents = '';
+            while (!feof($handle)) { $contents .= fread($handle, 8192); }
+            fclose($handle);
+            
+            preg_match("/const PSI_VERSION = '(.*)'/", $contents, $matches);
+            return $matches[1];
+        }
     }
-
-    //for 3.1.x version
-    if($phpsysinfo['phpSysInfo']['local'] == 0) {
-        $handle = fopen(PHPSYSINFO."/config.php", "rb");
+    
+    //try 3.1 version
+    $file = PHPSYSINFO."/config.php";
+    if(file_exists($file)) {
+        $handle = fopen($file, "rb");
         if($handle) {
             $contents = '';
             while (!feof($handle)) { $contents .= fread($handle, 8192); }
             fclose($handle);
             
             preg_match("/define\('PSI_VERSION','(.*)'\);/", $contents, $matches);
-            $phpsysinfo['phpSysInfo']['local'] = $matches[1];
+            return $matches[1];
         }
     }
+    
+    return "0";
+}
 
-    //get latest tag of a local repo
-    //(but you are not sure if dir is a git repo and the latest tag are stable tag, and we need to fetch before)
-    //exec("cd ". $phpsysinfo_local . " && git describe", $output);
-    //$phpsysinfo['phpSysInfo']['remote'] = $output;
-
-    //get latest file for master branch on git
+function check_phpsysinfo_remote(){
     $psi_file = file_get_contents("https://raw.github.com/rk4an/phpsysinfo/stable/config.php");
     if($psi_file) {
         preg_match("/define\('PSI_VERSION','(.*)'\);/", $psi_file, $matches);
-        $phpsysinfo['phpSysInfo']['remote'] = $matches[1];
+        return $matches[1];
     }
+    return "0";
+}
 
+if(defined("PIWIGO")) {
+    $piwigo['Piwigo']['local'] = check_piwigo_local();
+    $piwigo['Piwigo']['remote'] = check_piwigo_remote();
+    $json_version[] = $piwigo;
+}
+
+if(defined("OWNCLOUD")) {
+    $ocs['OwnCloud']['local'] = check_owncloud_local();
+    $ocs['OwnCloud']['remote'] = check_owncloud_remote();
+    $json_version[] = $ocs;
+}
+
+if(defined("PHPSYSINFO")) {
+    $phpsysinfo['phpSysInfo']['local'] = check_phpsysinfo_local();
+    $phpsysinfo['phpSysInfo']['remote'] = check_phpsysinfo_remote();
     $json_version[] = $phpsysinfo;
 }
 
