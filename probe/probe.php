@@ -2,7 +2,7 @@
 
 $json_version = array();
 
-require_once("config_probe.php");
+include_once("config_probe.php");
 
 function check_piwigo_local(){
     $file = PIWIGO."/include/constants.php";
