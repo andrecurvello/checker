@@ -1,6 +1,6 @@
 <?php 
 
-require_once 'probe/probe.php';
+require_once 'probe/functions.php';
 
 class remoteTest extends PHPUnit_Framework_TestCase {
 
