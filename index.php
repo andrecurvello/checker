@@ -43,30 +43,37 @@
       </div>
     </div>
 
-    <div class="container">
+    <div id="checker" class="container">
 
       <h1>Checker: Keep your web apps up-to-date</h1>
 
-        <table class="table table-striped table-bordered table-hover table-condensed" style="width:500px">
+      <div class="server span6">
+        <h4 class="url"></h4>
 
-        <thead>
+        <table class="table table-hover table-condensed">
+
+          <thead>
             <tr>
-                <th>Apps</th>
-                <th>Version</th>
-                <th>Latest</th>
+              <th>Apps</th>
+              <th>Version</th>
+              <th>Latest</th>
             </tr>
-        </thead>
+          </thead>
         
-        <tbody id="tbl_content">
-        </tbody>
+          <tbody class="tbl_content">
+            <tr><td class="app"></td><td class="vs"></td><td class="latest"></td></tr>
+          </tbody>
 
         </table>
 
-    <div id="loader" style="display:none"><img src="img/ajax-loader.gif"></div>
+      </div>
+
+    <div id="loader" class="span6"  style="display:none"><img src="img/ajax-loader.gif"></div>
 
     </div> <!-- /container -->
 
     <script src="js/jquery.js"></script>
+    <script src="js/transparency.min.js"></script>
     <script src="js/display.js"></script>
 
   </body>
