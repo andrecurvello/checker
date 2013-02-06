@@ -1,22 +1,29 @@
 <?php
 
-function check_piwigo_local(){
-    $file = PIWIGO."/include/constants.php";
-    
-    if(!file_exists($file)) return "0";
+function read_file($file){
+    if(!file_exists($file)) 
+        return false;
     
     $handle = fopen($file, "r");
     if($handle) {
         $contents = '';
-        while (!feof($handle)) { $contents .= fread($handle, 8192);}
+        while (!feof($handle)) { 
+            $contents .= fread($handle, 8192);
+        }
         fclose($handle);
-        
-        if(preg_match("/define\('PHPWG_VERSION', '(.*)'\);/", $contents, $matches))
-            return $matches[1];
-        else
-            return "0";
+        return $contents;
     }
-    return "0";
+    return false;
+}
+
+function check_piwigo_local(){
+    $contents = read_file(PIWIGO."/include/constants.php");
+    if(!$contents) return "0";
+    
+    if(preg_match("/define\('PHPWG_VERSION', '(.*)'\);/", $contents, $matches))
+        return $matches[1];
+    else
+        return "0";
 }
 
 function check_piwigo_remote(){
@@ -30,24 +37,13 @@ function check_piwigo_remote(){
 }
 
 function check_owncloud_local(){
-    
-    $file = OWNCLOUD."/lib/util.php";
-    
-    if(!file_exists($file)) return "0";
-    
-    $handle = fopen($file, "r");
-    if($handle) {
-        $contents = '';
-        while (!feof($handle)) { $contents .= fread($handle, 8192);}
-        fclose($handle);
+    $contents = read_file(OWNCLOUD."/lib/util.php");
+    if(!$contents) return "0";
         
-        if(preg_match("/getVersionString\(\) {\n(.*)return '(.*)';/", $contents, $matches))
-            return $matches[2];
-        else
-            return "0";
-    }
-    
-    return "0";
+    if(preg_match("/getVersionString\(\) {\n(.*)return '(.*)';/", $contents, $matches))
+        return $matches[2];
+    else
+        return "0";
 }
 
 function check_owncloud_remote(){
@@ -109,22 +105,13 @@ function check_phpsysinfo_remote(){
 
 
 function check_mediawiki_local(){
-    $file = MEDIAWIKI."/includes/DefaultSettings.php";
-    
-    if(!file_exists($file)) return "0";
-    
-    $handle = fopen($file, "r");
-    if($handle) {
-        $contents = '';
-        while (!feof($handle)) { $contents .= fread($handle, 8192); }
-        fclose($handle);
-        
-        if(preg_match("/wgVersion = '(.*)'/", $contents, $matches))
-            return $matches[1];
-        else
-            return "0";
-    }
-    return "0";
+    $contents = read_file(MEDIAWIKI."/includes/DefaultSettings.php");
+    if(!$contents) return "0";
+
+    if(preg_match("/wgVersion = '(.*)'/", $contents, $matches))
+        return $matches[1];
+    else
+        return "0";
 }
 
 function check_mediawiki_remote(){
@@ -138,20 +125,9 @@ function check_mediawiki_remote(){
 }
 
 function check_dokuwiki_local(){
-    
-    $file = DOKUWIKI."/VERSION";
-    
-    if(!file_exists($file)) return "0";
-    
-    $handle = fopen($file, "r");
-    if($handle) {
-        $contents = '';
-        while (!feof($handle)) { $contents .= fread($handle, 8192);}
-        fclose($handle);
-        
-        return $contents;
-    }
-    return "0";
+    $contents = read_file(DOKUWIKI."/VERSION");
+    if(!$contents) return "0";
+    return $contents;
 }
 
 function check_dokuwiki_remote(){
@@ -163,23 +139,13 @@ function check_dokuwiki_remote(){
 }
 
 function check_phpmyadmin_local(){
-    
-    $file = PHPMYADMIN."/libraries/Config.class.php";
-    
-    if(!file_exists($file)) return "0";
-    
-    $handle = fopen( $file, "r");
-    if($handle) {
-        $contents = '';
-        while (!feof($handle)) { $contents .= fread($handle, 8192);}
-        fclose($handle);
-        
-        if(preg_match("/this->set\('PMA_VERSION', '(.*)'\);/", $contents, $matches))
-            return $matches[1];
-        else
-            return "0";
-    }
-    return "0";
+    $contents = read_file(PHPMYADMIN."/libraries/Config.class.php");
+    if(!$contents) return "0";
+
+    if(preg_match("/this->set\('PMA_VERSION', '(.*)'\);/", $contents, $matches))
+        return $matches[1];
+    else
+        return "0";
 }
 
 function check_phpmyadmin_remote(){
@@ -192,19 +158,9 @@ function check_phpmyadmin_remote(){
 }
 
 function check_checker_local(){
-    $file = "VERSION";
-    
-    if(!file_exists($file)) return "0";
-    
-    $handle = fopen($file , "r");
-    if($handle) {
-        $contents = '';
-        while (!feof($handle)) { $contents .= fread($handle, 8192);}
-        fclose($handle);
-        
-        return $contents;
-    }
-    return "0";
+    $contents = read_file("VERSION");
+    if(!$contents) return "0";
+    return $contents;
 }
 
 function check_checker_remote(){
@@ -216,22 +172,13 @@ function check_checker_remote(){
 }
 
 function check_dotclear_local(){
-    $file = DOTCLEAR."/inc/prepend.php";
-    
-    if(!file_exists($file)) return "0";
-    
-    $handle = fopen($file, "r");
-    if($handle) {
-        $contents = '';
-        while (!feof($handle)) { $contents .= fread($handle, 8192);}
-        fclose($handle);
-
-        if(preg_match("/define\('DC_VERSION','(.*)'\);/", $contents, $matches))
-            return $matches[1];
-        else
-            return "0";
-    }
-    return "0";
+    $contents = read_file(DOTCLEAR."/inc/prepend.php");
+    if(!$contents) return "0";
+   
+    if(preg_match("/define\('DC_VERSION','(.*)'\);/", $contents, $matches))
+        return $matches[1];
+    else
+        return "0";
 }
 
 function check_dotclear_remote(){
@@ -248,19 +195,9 @@ function check_dotclear_remote(){
 
 
 function check_gitlab_local(){
-    $file = GITLAB."/VERSION";
-    
-    if(!file_exists($file)) return "0";
-    
-    $handle = fopen($file, "r");
-    if($handle) {
-        $contents = '';
-        while (!feof($handle)) { $contents .= fread($handle, 8192);}
-        fclose($handle);
-        
-        return $contents;
-    }
-    return "0";
+    $contents = read_file(GITLAB."/VERSION");
+    if(!$contents) return "0";
+    return $contents;
 }
 
 function check_gitlab_remote(){
@@ -273,21 +210,13 @@ function check_gitlab_remote(){
 
 
 function check_symfony_local(){
-    $file = SYMFONY."/composer.lock";
+    $contents = read_file(SYMFONY."/composer.lock");
+    if(!$contents) return "0";
     
-    if(!file_exists($file)) return "0";
-    
-    $handle = fopen($file, "r");
-    if($handle) {
-        $contents = '';
-        while (!feof($handle)) { $contents .= fread($handle, 8192);}
-        fclose($handle);
-        if(preg_match('/"name": "symfony\/symfony",'."\n".'(.*)"version": "v(.*)",/', $contents, $matches))
-            return $matches[2];
-        else
-            return "0";
-    }
-    return "0";
+    if(preg_match('/"name": "symfony\/symfony",'."\n".'(.*)"version": "v(.*)",/', $contents, $matches))
+        return $matches[2];
+    else
+        return "0";
 }
 
 function check_symfony_remote(){
@@ -302,22 +231,14 @@ function check_symfony_remote(){
 }
 
 function check_wordpress_local(){
-    $file = WORDPRESS."/wp-includes/version.php";
+    $contents = read_file(WORDPRESS."/wp-includes/version.php");
+    if(!$contents) return "0";
     
-    if(!file_exists($file)) return "0";
-    
-    $handle = fopen($file, "r");
-    if($handle) {
-        $contents = '';
-        while (!feof($handle)) { $contents .= fread($handle, 8192);}
-        fclose($handle);
-        
-        if(preg_match("/wp_version = '(.*)';/", $contents, $matches))
-            return $matches[1];
-        else
-            return "0";
-    }
-    return "0";
+    if(preg_match("/wp_version = '(.*)';/", $contents, $matches))
+        return $matches[1];
+    else
+        return "0";
+
 }
 
 function check_wordpress_remote(){
