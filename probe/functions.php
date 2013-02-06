@@ -15,7 +15,7 @@ function check_piwigo_local(){
     if(!$contents) return "0";
     
     if(preg_match("/define\('PHPWG_VERSION', '(.*)'\);/", $contents, $matches))
-        return $matches[1];
+        return trim($matches[1]);
     else
         return "0";
 }
@@ -25,7 +25,7 @@ function check_piwigo_remote(){
     if($contents) {
         $all_piwigo_versions = @explode("\n", $contents);
         $new_piwigo_version = trim($all_piwigo_versions[0]);
-        return $new_piwigo_version;
+        return trim($new_piwigo_version);
     }
     return "0";
 }
@@ -35,7 +35,7 @@ function check_owncloud_local(){
     if(!$contents) return "0";
         
     if(preg_match("/getVersionString\(\) {\n(.*)return '(.*)';/", $contents, $matches))
-        return $matches[2];
+        return trim($matches[2]);
     else
         return "0";
 }
@@ -44,7 +44,7 @@ function check_owncloud_remote(){
     $contents = @file_get_contents("https://raw.github.com/owncloud/core/stable45/lib/util.php");
     if($contents) {
         if(preg_match("/getVersionString\(\) {\n(.*)return '(.*)';/", $contents, $matches))
-            return $matches[2];
+            return trim($matches[2]);
         else
             return "0";
     }
@@ -57,13 +57,13 @@ function check_phpsysinfo_local(){
     if(!$contents) return "0";
     
     if(preg_match("/const PSI_VERSION = '(.*)'/", $contents, $matches))
-        return $matches[1];
+        return trim($matches[1]);
     else {
         $contents = read_file(PHPSYSINFO."/config.php");
         if(!$contents) return "0";
         
         if(preg_match("/define\('PSI_VERSION','(.*)'\);/", $contents, $matches))
-            return $matches[1];
+            return trim($matches[1]);
         else 
             return "0";
     }
@@ -75,7 +75,7 @@ function check_phpsysinfo_remote(){
     $contents = @file_get_contents("https://raw.github.com/rk4an/phpsysinfo/stable/config.php");
     if($contents) {
         if(preg_match("/define\('PSI_VERSION','(.*)'\);/", $contents, $matches))
-            return $matches[1];
+            return trim($matches[1]);
         else
             return "0";
     }
@@ -88,7 +88,7 @@ function check_mediawiki_local(){
     if(!$contents) return "0";
 
     if(preg_match("/wgVersion = '(.*)'/", $contents, $matches))
-        return $matches[1];
+        return trim($matches[1]);
     else
         return "0";
 }
@@ -106,13 +106,13 @@ function check_mediawiki_remote(){
 function check_dokuwiki_local(){
     $contents = read_file(DOKUWIKI."/VERSION");
     if(!$contents) return "0";
-    return $contents;
+    return trim($contents);
 }
 
 function check_dokuwiki_remote(){
     $contents = @file_get_contents("https://raw.github.com/splitbrain/dokuwiki/stable/VERSION");
     if($contents) {
-        return $contents;
+        return trim($contents);
     }
     return "0";
 }
@@ -122,7 +122,7 @@ function check_phpmyadmin_local(){
     if(!$contents) return "0";
 
     if(preg_match("/this->set\('PMA_VERSION', '(.*)'\);/", $contents, $matches))
-        return $matches[1];
+        return trim($matches[1]);
     else
         return "0";
 }
@@ -131,7 +131,7 @@ function check_phpmyadmin_remote(){
     $contents = @file_get_contents("http://www.phpmyadmin.net/home_page/version.js");
     if($contents) {
         preg_match("/PMA_latest_version = '(.*)'/", $contents, $matches);
-        return $matches[1];
+        return trim($matches[1]);
     }
     return "0";
 }
@@ -139,13 +139,13 @@ function check_phpmyadmin_remote(){
 function check_checker_local(){
     $contents = read_file("VERSION");
     if(!$contents) return "0";
-    return $contents;
+    return trim($contents);
 }
 
 function check_checker_remote(){
     $contents = @file_get_contents("https://raw.github.com/rk4an/checker/dev/probe/VERSION");
     if($contents) {
-        return $contents;
+        return trim($contents);
     }
     return "0";
 }
@@ -155,7 +155,7 @@ function check_dotclear_local(){
     if(!$contents) return "0";
    
     if(preg_match("/define\('DC_VERSION','(.*)'\);/", $contents, $matches))
-        return $matches[1];
+        return trim($matches[1]);
     else
         return "0";
 }
@@ -165,7 +165,7 @@ function check_dotclear_remote(){
     
     if($contents) {
         if(preg_match("/name=\"stable\" version=\"(.*)\"/", $contents, $matches))
-            return $matches[1];
+            return trim($matches[1]);
         else
             return "0";
     }
@@ -176,13 +176,13 @@ function check_dotclear_remote(){
 function check_gitlab_local(){
     $contents = read_file(GITLAB."/VERSION");
     if(!$contents) return "0";
-    return $contents;
+    return trim($contents);
 }
 
 function check_gitlab_remote(){
     $contents = @file_get_contents("https://raw.github.com/gitlabhq/gitlabhq/stable/VERSION");
     if($contents) {
-        return $contents;
+        return trim($contents);
     }
     return "0";
 }
@@ -193,7 +193,7 @@ function check_symfony_local(){
     if(!$contents) return "0";
     
     if(preg_match('/"name": "symfony\/symfony",'."\n".'(.*)"version": "v(.*)",/', $contents, $matches))
-        return $matches[2];
+        return trim($matches[2]);
     else
         return "0";
 }
@@ -202,7 +202,7 @@ function check_symfony_remote(){
     $contents = @file_get_contents("https://raw.github.com/symfony/symfony-standard/2.1/composer.lock");
     if($contents) {
         if(preg_match('/"name": "symfony\/symfony",'."\n".'(.*)"version": "v(.*)",/', $contents, $matches))
-            return $matches[2];
+            return trim($matches[2]);
         else
             return "0";
     }
@@ -214,7 +214,7 @@ function check_wordpress_local(){
     if(!$contents) return "0";
     
     if(preg_match("/wp_version = '(.*)';/", $contents, $matches))
-        return $matches[1];
+        return trim($matches[1]);
     else
         return "0";
 
@@ -224,7 +224,7 @@ function check_wordpress_remote(){
     $contents = @file_get_contents("http://api.wordpress.org/core/version-check/1.6/");
     if($contents) {
         $wordpress_array = unserialize($contents);
-        return $wordpress_array['offers'][0]['current'];
+        return trim($wordpress_array['offers'][0]['current']);
     }
     return "0";
 }
