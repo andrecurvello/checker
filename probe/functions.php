@@ -60,10 +60,10 @@ function check_owncloud_remote(){
 function check_phpsysinfo_local(){
     
     $contents = read_file(PHPSYSINFO."/includes/class.CommonFunctions.inc.php");
-    if($contents) {
-            if(preg_match("/const PSI_VERSION = '(.*)'/", $contents, $matches))
-                return $matches[1];
-    }
+    if(!$contents) return "0";
+    
+    if(preg_match("/const PSI_VERSION = '(.*)'/", $contents, $matches))
+        return $matches[1];
     else {
         $contents = read_file(PHPSYSINFO."/config.php");
         if(!$contents) return "0";
@@ -73,6 +73,7 @@ function check_phpsysinfo_local(){
         else 
             return "0";
     }
+    
     return "0";
 }
 
