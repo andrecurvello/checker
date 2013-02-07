@@ -10,6 +10,22 @@ function read_file($file){
     return @file_get_contents($file);
 }
 
+function read_remote_file($url) {
+    $opts = array(
+       'http'=> array(
+         'header' => 'Connection: close'
+     )
+    );
+    $context = stream_context_create($opts);
+    return @file_get_contents($url, false, $context);
+    
+    /*$ch = curl_init();
+    curl_setopt($ch, CURLOPT_URL, $url);
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+    return curl_exec($ch);*/
+}
+
 function check_piwigo_local(){
     $contents = read_file(PIWIGO."/include/constants.php");
     if(!$contents) return "0";
@@ -21,7 +37,7 @@ function check_piwigo_local(){
 }
 
 function check_piwigo_remote(){
-    $contents = @file_get_contents("http://piwigo.org/download/all_versions.php");
+    $contents = read_remote_file("http://piwigo.org/download/all_versions.php");
     if($contents) {
         $all_piwigo_versions = @explode("\n", $contents);
         $new_piwigo_version = trim($all_piwigo_versions[0]);
@@ -41,7 +57,7 @@ function check_owncloud_local(){
 }
 
 function check_owncloud_remote(){
-    $contents = @file_get_contents("https://raw.github.com/owncloud/core/stable45/lib/util.php");
+    $contents = read_remote_file("https://raw.github.com/owncloud/core/stable45/lib/util.php");
     if($contents) {
         if(preg_match("/getVersionString\(\) {\n(.*)return '(.*)';/", $contents, $matches))
             return trim($matches[2]);
@@ -72,7 +88,7 @@ function check_phpsysinfo_local(){
 }
 
 function check_phpsysinfo_remote(){
-    $contents = @file_get_contents("https://raw.github.com/rk4an/phpsysinfo/stable/config.php");
+    $contents = read_remote_file("https://raw.github.com/rk4an/phpsysinfo/stable/config.php");
     if($contents) {
         if(preg_match("/define\('PSI_VERSION','(.*)'\);/", $contents, $matches))
             return trim($matches[1]);
@@ -110,7 +126,7 @@ function check_dokuwiki_local(){
 }
 
 function check_dokuwiki_remote(){
-    $contents = @file_get_contents("https://raw.github.com/splitbrain/dokuwiki/stable/VERSION");
+    $contents = read_remote_file("https://raw.github.com/splitbrain/dokuwiki/stable/VERSION");
     if($contents) {
         return trim($contents);
     }
@@ -128,7 +144,7 @@ function check_phpmyadmin_local(){
 }
 
 function check_phpmyadmin_remote(){
-    $contents = @file_get_contents("http://www.phpmyadmin.net/home_page/version.js");
+    $contents = read_remote_file("http://www.phpmyadmin.net/home_page/version.js");
     if($contents) {
         preg_match("/PMA_latest_version = '(.*)'/", $contents, $matches);
         return trim($matches[1]);
@@ -143,7 +159,7 @@ function check_checker_local(){
 }
 
 function check_checker_remote(){
-    $contents = @file_get_contents("https://raw.github.com/rk4an/checker/dev/probe/VERSION");
+    $contents = read_remote_file("https://raw.github.com/rk4an/checker/dev/probe/VERSION");
     if($contents) {
         return trim($contents);
     }
@@ -161,7 +177,7 @@ function check_dotclear_local(){
 }
 
 function check_dotclear_remote(){
-    $contents = @file_get_contents("http://download.dotclear.org/versions.xml");
+    $contents = read_remote_file("http://download.dotclear.org/versions.xml");
     
     if($contents) {
         if(preg_match("/name=\"stable\" version=\"(.*)\"/", $contents, $matches))
@@ -180,7 +196,7 @@ function check_gitlab_local(){
 }
 
 function check_gitlab_remote(){
-    $contents = @file_get_contents("https://raw.github.com/gitlabhq/gitlabhq/stable/VERSION");
+    $contents = read_remote_file("https://raw.github.com/gitlabhq/gitlabhq/stable/VERSION");
     if($contents) {
         return trim($contents);
     }
@@ -199,7 +215,7 @@ function check_symfony_local(){
 }
 
 function check_symfony_remote(){
-    $contents = @file_get_contents("https://raw.github.com/symfony/symfony-standard/2.1/composer.lock");
+    $contents = read_remote_file("https://raw.github.com/symfony/symfony-standard/2.1/composer.lock");
     if($contents) {
         if(preg_match('/"name": "symfony\/symfony",'."\n".'(.*)"version": "v(.*)",/', $contents, $matches))
             return trim($matches[2]);
@@ -220,7 +236,7 @@ function check_wordpress_local(){
 }
 
 function check_wordpress_remote(){
-    $contents = @file_get_contents("http://api.wordpress.org/core/version-check/1.6/");
+    $contents = read_remote_file("http://api.wordpress.org/core/version-check/1.6/");
     if($contents) {
         $wordpress_array = unserialize($contents);
         return trim($wordpress_array['offers'][0]['current']);
@@ -235,7 +251,7 @@ function check_pluxml_local(){
 }
 
 function check_pluxml_remote(){
-    $contents = @file_get_contents("https://raw.github.com/pluxml/PluXml/master/version");
+    $contents = read_remote_file("https://raw.github.com/pluxml/PluXml/master/version");
     if($contents) {
         return trim($contents);
     }
