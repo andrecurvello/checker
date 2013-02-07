@@ -10,13 +10,20 @@ $(document).ajaxStop(function(){
     $("#loader").hide();
 });     
 
-$.getJSON('./config.json', function(json) {
+var json = {
+    "server":[]
+};
 
-    var json_server = "{server:[";
+$.getJSON('./config.json', function(json) {
 
     $.each( json["server"], function(key,url){
 
-        json_server += "{url:'" + url + "',tbl_content:["; 
+        var json_server = {
+            "url": url,
+            "tbl_content" : []
+        };
+        
+        json.server.push(json_server);
 
         $.ajax({
             type: "GET",
@@ -30,9 +37,6 @@ $.getJSON('./config.json', function(json) {
                 
                 $.each(json_version, function(key, value){
                     $.each(json_version[key], function(app, version){
-                        var regNewline = new RegExp("(\r\n|\r|\n)", "g" );
-                        version["local"]  = version["local"].replace(regNewline,''); 
-                        version["remote"] = version["remote"].replace(regNewline,''); 
 
                         if(version["local"] == version["remote"]) {
                             var label = "label-success";
@@ -44,8 +48,14 @@ $.getJSON('./config.json', function(json) {
                             var label = "label-important";
                         }
                         
-                        json_server += "{app:'" + app + "',label:'" + label + "',version:'" + version["local"] + "',latest:'" + version["remote"] + "'},";
-
+                        var json_app = {
+                            "app": app,
+                            "label": label,
+                            "version": version["local"],
+                            "latest": version["remote"]
+                        };
+                        json_server.tbl_content.push(json_app);
+                        
                     });
                 });
                 
@@ -55,16 +65,12 @@ $.getJSON('./config.json', function(json) {
             }
         });
 
-        json_server += "]},";
-
     });
-
-    json_server += "]}";
 
     nameDecorator = function() { 
         return "<span class='label " + this.label + "'>" + this.version + "</span>"; 
     };
     var directives = { server: { tbl_content: { vs: { html: nameDecorator } } } };
 
-    $('#checker').render(eval("(" + json_server + ")"), directives);
+    $('#checker').render(json, directives);
 });
