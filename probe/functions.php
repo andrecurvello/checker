@@ -217,7 +217,6 @@ function check_wordpress_local(){
         return trim($matches[1]);
     else
         return "0";
-
 }
 
 function check_wordpress_remote(){
@@ -225,6 +224,20 @@ function check_wordpress_remote(){
     if($contents) {
         $wordpress_array = unserialize($contents);
         return trim($wordpress_array['offers'][0]['current']);
+    }
+    return "0";
+}
+
+function check_pluxml_local(){
+    $contents = read_file(PLUXML."/version");
+    if(!$contents) return "0";
+    return trim($contents);
+}
+
+function check_pluxml_remote(){
+    $contents = @file_get_contents("https://raw.github.com/pluxml/PluXml/master/version");
+    if($contents) {
+        return trim($contents);
     }
     return "0";
 }

@@ -10,5 +10,6 @@ define("WORDPRESS", "/home/erkan/public_html/wordpress");
 define("DOTCLEAR", "/home/erkan/public_html/dotclear");
 define("GITLAB", "/home/erkan/public_html/gitlab");
 define("SYMFONY", "/home/erkan/public_html/symfony");
+define("PLUXML", "/home/erkan/public_html/pluxml");
 
 ?>

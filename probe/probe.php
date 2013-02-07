@@ -32,7 +32,6 @@ if(defined("MEDIAWIKI")) {
 if(defined("DOKUWIKI")) {
     $dokuwiki['Dokuwiki']['local'] = check_dokuwiki_local();
     $dokuwiki['Dokuwiki']['remote'] = check_dokuwiki_remote();
-    
     $json_version[] = $dokuwiki;
 }
 
@@ -64,6 +63,12 @@ if(defined("SYMFONY")) {
     $sf['Symfony']['local'] = check_symfony_local();
     $sf['Symfony']['remote'] = check_symfony_remote();
     $json_version[] = $sf;
+}
+
+if(defined("PLUXML")) {
+    $pluxml['PluXml']['local'] = check_pluxml_local();
+    $pluxml['PluXml']['remote'] = check_pluxml_remote();
+    $json_version[] = $pluxml;
 }
 
 $checker['Checker']['local'] = check_checker_local();

@@ -20,4 +20,5 @@ Supported apps:
  * Dotclear
  * Gitlab
  * Symfony2
+ * PluXml
  * Checker
