@@ -10,7 +10,7 @@ $(document).ajaxStop(function(){
     $("#loader").hide();
 });     
 
-var json = {
+var json_info = {
     "server":[]
 };
 
@@ -23,7 +23,7 @@ $.getJSON('./config.json', function(json) {
             "tbl_content" : []
         };
         
-        json.server.push(json_server);
+        json_info.server.push(json_server);
 
         $.ajax({
             type: "GET",
@@ -72,5 +72,5 @@ $.getJSON('./config.json', function(json) {
     };
     var directives = { server: { tbl_content: { vs: { html: nameDecorator } } } };
 
-    $('#checker').render(json, directives);
+    $('#checker').render(json_info, directives);
 });
