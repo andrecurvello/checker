@@ -1,80 +1,68 @@
 <?php
 
-$json_version = array();
-
 require_once("functions.php");
 require_once("config_probe.php");
 
+$json_version = array();
+
 if(defined("PIWIGO")) {
-    $piwigo['Piwigo']['local'] = check_piwigo_local();
-    $piwigo['Piwigo']['remote'] = check_piwigo_remote();
-    $json_version[] = $piwigo;
+    $json_version['Piwigo']['local'] = check_piwigo_local();
+    $json_version['Piwigo']['remote'] = check_piwigo_remote();
 }
 
 if(defined("OWNCLOUD")) {
-    $ocs['OwnCloud']['local'] = check_owncloud_local();
-    $ocs['OwnCloud']['remote'] = check_owncloud_remote();
-    $json_version[] = $ocs;
+    $json_version['OwnCloud']['local'] = check_owncloud_local();
+    $json_version['OwnCloud']['remote'] = check_owncloud_remote();
 }
 
 if(defined("PHPSYSINFO")) {
-    $phpsysinfo['phpSysInfo']['local'] = check_phpsysinfo_local();
-    $phpsysinfo['phpSysInfo']['remote'] = check_phpsysinfo_remote();
-    $json_version[] = $phpsysinfo;
+    $json_version['phpSysInfo']['local'] = check_phpsysinfo_local();
+    $json_version['phpSysInfo']['remote'] = check_phpsysinfo_remote();
 }
 
 if(defined("MEDIAWIKI")) {
-    $mediawiki['MediaWiki']['local'] = check_mediawiki_local();
-    $mediawiki['MediaWiki']['remote'] = check_mediawiki_remote();
-    $json_version[] = $mediawiki;
+    $json_version['MediaWiki']['local'] = check_mediawiki_local();
+    $json_version['MediaWiki']['remote'] = check_mediawiki_remote();
 }
 
 if(defined("DOKUWIKI")) {
-    $dokuwiki['Dokuwiki']['local'] = check_dokuwiki_local();
-    $dokuwiki['Dokuwiki']['remote'] = check_dokuwiki_remote();
-    $json_version[] = $dokuwiki;
+    $json_version['Dokuwiki']['local'] = check_dokuwiki_local();
+    $json_version['Dokuwiki']['remote'] = check_dokuwiki_remote();
 }
 
 if(defined("PHPMYADMIN")) {
-    $pma['phpMyAdmin']['local'] = check_phpmyadmin_local();
-    $pma['phpMyAdmin']['remote'] = check_phpmyadmin_remote();
-    $json_version[] = $pma;
+    $json_version['phpMyAdmin']['local'] = check_phpmyadmin_local();
+    $json_version['phpMyAdmin']['remote'] = check_phpmyadmin_remote();
 }
 
 if(defined("WORDPRESS")) {
-    $wordpress['Wordpress']['local'] = check_wordpress_local();
-    $wordpress['Wordpress']['remote'] = check_wordpress_remote();
-    $json_version[] = $wordpress;
+    $json_version['Wordpress']['local'] = check_wordpress_local();
+    $json_version['Wordpress']['remote'] = check_wordpress_remote();
 }
 
 if(defined("DOTCLEAR")) {
-    $dotclear['Dotclear']['local'] = check_dotclear_local();
-    $dotclear['Dotclear']['remote'] = check_dotclear_remote();
-    $json_version[] = $dotclear;
+    $json_version['Dotclear']['local'] = check_dotclear_local();
+    $json_version['Dotclear']['remote'] = check_dotclear_remote();
 }
 
 if(defined("GITLAB")) {
-    $gitlab['Gitlab']['local'] = check_gitlab_local();
-    $gitlab['Gitlab']['remote'] = check_gitlab_remote();
-    $json_version[] = $gitlab;
+    $json_version['Gitlab']['local'] = check_gitlab_local();
+    $json_version['Gitlab']['remote'] = check_gitlab_remote();
 }
 
 if(defined("SYMFONY")) {
-    $sf['Symfony']['local'] = check_symfony_local();
-    $sf['Symfony']['remote'] = check_symfony_remote();
-    $json_version[] = $sf;
+    $json_version['Symfony']['local'] = check_symfony_local();
+    $json_version['Symfony']['remote'] = check_symfony_remote();
 }
 
 if(defined("PLUXML")) {
-    $pluxml['PluXml']['local'] = check_pluxml_local();
-    $pluxml['PluXml']['remote'] = check_pluxml_remote();
-    $json_version[] = $pluxml;
+    $json_version['PluXml']['local'] = check_pluxml_local();
+    $json_version['PluXml']['remote'] = check_pluxml_remote();
 }
 
-$checker['Checker']['local'] = check_checker_local();
-$checker['Checker']['remote'] = check_checker_remote();
-$json_version[] = $checker;
+$json_version['Checker']['local'] = check_checker_local();
+$json_version['Checker']['remote'] = check_checker_remote();
 
-echo json_encode($json_version);
+echo json_encode(array($json_version));
 
 ?>
