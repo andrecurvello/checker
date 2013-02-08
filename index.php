@@ -10,8 +10,45 @@
     <link href="css/bootstrap.css" rel="stylesheet">
     <style>
       body {
-        padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
+        padding-top: 20px;
+        padding-bottom: 40px;
       }
+
+      /* Custom container */
+      .container-narrow {
+        margin: 0 auto;
+        max-width: 700px;
+      }
+      .container-narrow > hr {
+        margin: 30px 0;
+      }
+
+      /* Main marketing message and sign up button */
+      .jumbotron {
+        margin: 60px 0;
+        text-align: center;
+      }
+      .jumbotron h1 {
+        font-size: 72px;
+        line-height: 1;
+      }
+      .jumbotron .btn {
+        font-size: 21px;
+        padding: 14px 24px;
+      }
+
+      /* Supporting marketing content */
+      .marketing {
+        margin: 60px 0;
+      }
+      .marketing p + h4 {
+        margin-top: 28px;
+      }
+
+      h5.url {
+        line-height: 0;
+      }
+
     </style>
     <link href="css/bootstrap-responsive.css" rel="stylesheet">
 
@@ -25,53 +62,41 @@
 
   <body>
 
-    <div class="navbar navbar-inverse navbar-fixed-top">
-      <div class="navbar-inner">
-        <div class="container">
-          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </a>
-          <a class="brand" href="#">Checker</a>
-          <div class="nav-collapse collapse">
-            <ul class="nav">
-              <li class="active"><a href="#">Home</a></li>
-            </ul>
-          </div><!--/.nav-collapse -->
-        </div>
-      </div>
+    <div id="checker" class="container-narrow">
+
+    <div class="header">
+      <h3 class="muted">Checker <small>- Keep your web apps up-to-date</small></h3>
     </div>
 
-    <div id="checker" class="container">
+    <hr />
 
-      <h1>Checker: Keep your web apps up-to-date</h1>
-
-      <div class="server span6">
-        <h4 class="url"></h4>
-
-        <table class="table table-hover table-condensed">
-
-          <thead>
-            <tr>
-              <th>Apps</th>
-              <th>Version</th>
-              <th>Latest</th>
-            </tr>
-          </thead>
+    <div class="server">
+      <div class="label label-info"><h5 class="url span7"></h5></div>
+      
+      <table class="table table-hover table-condensed">
         
-          <tbody class="tbl_content">
-            <tr><td class="app"></td><td class="vs"></td><td class="latest"></td></tr>
-          </tbody>
+        <thead>
+          <tr>
+            <th>Apps</th>
+            <th>Version</th>
+            <th>Latest</th>
+          </tr>
+        </thead>
+        
+        <tbody class="tbl_content">
+          <tr><td class="app"></td><td class="vs"></td><td class="latest"></td></tr>
+        </tbody>
+        
+      </table>
 
-        </table>
+      <hr />
 
-      </div>
-
-    <div id="loader" class="span6"  style="display:none"><img src="img/ajax-loader.gif"></div>
-
+    </div>
+    
+    <div id="loader" style="display:none"><img src="img/ajax-loader.gif"></div>
+    
     </div> <!-- /container -->
-
+    
     <script src="js/jquery.js"></script>
     <script src="js/transparency.min.js"></script>
     <script src="js/display.js"></script>
