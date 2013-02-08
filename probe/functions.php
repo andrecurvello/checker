@@ -59,8 +59,8 @@ function read_remote_file($i) {
     return $results[$i];
 }
 
-function check_piwigo_local(){
-    $contents = read_file(PIWIGO."/include/constants.php");
+function check_piwigo_local($url){
+    $contents = read_file($url."/include/constants.php");
     if(!$contents) return "0";
     
     if(preg_match("/define\('PHPWG_VERSION', '(.*)'\);/", $contents, $matches))
@@ -79,8 +79,8 @@ function check_piwigo_remote(){
     return "0";
 }
 
-function check_owncloud_local(){
-    $contents = read_file(OWNCLOUD."/lib/util.php");
+function check_owncloud_local($url){
+    $contents = read_file($url."/lib/util.php");
     if(!$contents) return "0";
         
     if(preg_match("/getVersionString\(\) {\n(.*)return '(.*)';/", $contents, $matches))
@@ -100,15 +100,15 @@ function check_owncloud_remote(){
     return "0";
 }
     
-function check_phpsysinfo_local(){
+function check_phpsysinfo_local($url){
     
-    $contents = read_file(PHPSYSINFO."/includes/class.CommonFunctions.inc.php");
+    $contents = read_file($url."/includes/class.CommonFunctions.inc.php");
     if(!$contents) return "0";
     
     if(preg_match("/const PSI_VERSION = '(.*)'/", $contents, $matches))
         return trim($matches[1]);
     else {
-        $contents = read_file(PHPSYSINFO."/config.php");
+        $contents = read_file($url."/config.php");
         if(!$contents) return "0";
         
         if(preg_match("/define\('PSI_VERSION','(.*)'\);/", $contents, $matches))
@@ -132,8 +132,8 @@ function check_phpsysinfo_remote(){
 }
 
 
-function check_mediawiki_local(){
-    $contents = read_file(MEDIAWIKI."/includes/DefaultSettings.php");
+function check_mediawiki_local($url){
+    $contents = read_file($url."/includes/DefaultSettings.php");
     if(!$contents) return "0";
 
     if(preg_match("/wgVersion = '(.*)'/", $contents, $matches))
@@ -152,8 +152,8 @@ function check_mediawiki_remote(){
     return $output[0];
 }
 
-function check_dokuwiki_local(){
-    $contents = read_file(DOKUWIKI."/VERSION");
+function check_dokuwiki_local($url){
+    $contents = read_file($url."/VERSION");
     if(!$contents) return "0";
     return trim($contents);
 }
@@ -166,8 +166,8 @@ function check_dokuwiki_remote(){
     return "0";
 }
 
-function check_phpmyadmin_local(){
-    $contents = read_file(PHPMYADMIN."/libraries/Config.class.php");
+function check_phpmyadmin_local($url){
+    $contents = read_file($url."/libraries/Config.class.php");
     if(!$contents) return "0";
 
     if(preg_match("/this->set\('PMA_VERSION', '(.*)'\);/", $contents, $matches))
@@ -199,8 +199,8 @@ function check_checker_remote(){
     return "0";
 }
 
-function check_dotclear_local(){
-    $contents = read_file(DOTCLEAR."/inc/prepend.php");
+function check_dotclear_local($url){
+    $contents = read_file($url."/inc/prepend.php");
     if(!$contents) return "0";
    
     if(preg_match("/define\('DC_VERSION','(.*)'\);/", $contents, $matches))
@@ -222,8 +222,8 @@ function check_dotclear_remote(){
 }
 
 
-function check_gitlab_local(){
-    $contents = read_file(GITLAB."/VERSION");
+function check_gitlab_local($url){
+    $contents = read_file($url."/VERSION");
     if(!$contents) return "0";
     return trim($contents);
 }
@@ -237,8 +237,8 @@ function check_gitlab_remote(){
 }
 
 
-function check_symfony_local(){
-    $contents = read_file(SYMFONY."/composer.lock");
+function check_symfony_local($url){
+    $contents = read_file($url."/composer.lock");
     if(!$contents) return "0";
     
     if(preg_match('/"name": "symfony\/symfony",'."\n".'(.*)"version": "v(.*)",/', $contents, $matches))
@@ -258,8 +258,8 @@ function check_symfony_remote(){
     return "0";
 }
 
-function check_wordpress_local(){
-    $contents = read_file(WORDPRESS."/wp-includes/version.php");
+function check_wordpress_local($url){
+    $contents = read_file($url."/wp-includes/version.php");
     if(!$contents) return "0";
     
     if(preg_match("/wp_version = '(.*)';/", $contents, $matches))
@@ -277,8 +277,8 @@ function check_wordpress_remote(){
     return "0";
 }
 
-function check_pluxml_local(){
-    $contents = read_file(PLUXML."/version");
+function check_pluxml_local($url){
+    $contents = read_file($url."/version");
     if(!$contents) return "0";
     return trim($contents);
 }
