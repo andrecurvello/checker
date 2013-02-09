@@ -3,21 +3,6 @@
 //error_reporting(0);
 header("content-type: application/json");
 
-$nodes = array(
-    "http://piwigo.org/download/all_versions.php",
-    "https://raw.github.com/owncloud/core/stable45/lib/util.php",
-    "https://raw.github.com/rk4an/phpsysinfo/stable/config.php",
-    "https://raw.github.com/splitbrain/dokuwiki/stable/VERSION",
-    "http://www.phpmyadmin.net/home_page/version.js",
-    "https://raw.github.com/rk4an/checker/dev/probe/VERSION",
-    "http://download.dotclear.org/versions.xml",
-    "https://raw.github.com/gitlabhq/gitlabhq/stable/VERSION",
-    "https://raw.github.com/pluxml/PluXml/master/version",
-    "http://api.wordpress.org/core/version-check/1.6/",
-    "https://raw.github.com/symfony/symfony-standard/2.1/composer.lock",
-);
-
-$results = get_nodes($nodes);
 
 function read_file($file){
     if(!file_exists($file)) 
@@ -54,11 +39,6 @@ function get_nodes($nodes){
 }
 
 
-function read_remote_file($i) {
-    global $results;
-    return $results[$i];
-}
-
 function check_piwigo_local($url){
     $contents = read_file($url."/include/constants.php");
     if(!$contents) return "0";
@@ -69,8 +49,7 @@ function check_piwigo_local($url){
         return "0";
 }
 
-function check_piwigo_remote(){
-    $contents = read_remote_file(0);
+function check_piwigo_remote($contents){
     if($contents) {
         $all_piwigo_versions = @explode("\n", $contents);
         $new_piwigo_version = trim($all_piwigo_versions[0]);
@@ -89,8 +68,7 @@ function check_owncloud_local($url){
         return "0";
 }
 
-function check_owncloud_remote(){
-    $contents = read_remote_file(1);
+function check_owncloud_remote($contents){
     if($contents) {
         if(preg_match("/getVersionString\(\) {\n(.*)return '(.*)';/", $contents, $matches))
             return trim($matches[2]);
@@ -120,8 +98,7 @@ function check_phpsysinfo_local($url){
     return "0";
 }
 
-function check_phpsysinfo_remote(){
-    $contents = read_remote_file(2);
+function check_phpsysinfo_remote($contents){
     if($contents) {
         if(preg_match("/define\('PSI_VERSION','(.*)'\);/", $contents, $matches))
             return trim($matches[1]);
@@ -158,8 +135,7 @@ function check_dokuwiki_local($url){
     return trim($contents);
 }
 
-function check_dokuwiki_remote(){
-    $contents = read_remote_file(3);
+function check_dokuwiki_remote($contents){
     if($contents) {
         return trim($contents);
     }
@@ -176,8 +152,7 @@ function check_phpmyadmin_local($url){
         return "0";
 }
 
-function check_phpmyadmin_remote(){
-    $contents = read_remote_file(4);
+function check_phpmyadmin_remote($contents){
     if($contents) {
         preg_match("/PMA_latest_version = '(.*)'/", $contents, $matches);
         return trim($matches[1]);
@@ -191,8 +166,7 @@ function check_checker_local(){
     return trim($contents);
 }
 
-function check_checker_remote(){
-    $contents = read_remote_file(5);
+function check_checker_remote($contents){
     if($contents) {
         return trim($contents);
     }
@@ -209,8 +183,7 @@ function check_dotclear_local($url){
         return "0";
 }
 
-function check_dotclear_remote(){
-    $contents = read_remote_file(6);
+function check_dotclear_remote($contents){
     
     if($contents) {
         if(preg_match("/name=\"stable\" version=\"(.*)\"/", $contents, $matches))
@@ -228,8 +201,7 @@ function check_gitlab_local($url){
     return trim($contents);
 }
 
-function check_gitlab_remote(){
-    $contents = read_remote_file(7);
+function check_gitlab_remote($contents){
     if($contents) {
         return trim($contents);
     }
@@ -247,8 +219,7 @@ function check_symfony_local($url){
         return "0";
 }
 
-function check_symfony_remote(){
-    $contents = read_remote_file(10);
+function check_symfony_remote($contents){
     if($contents) {
         if(preg_match('/"name": "symfony\/symfony",'."\n".'(.*)"version": "v(.*)",/', $contents, $matches))
             return trim($matches[2]);
@@ -268,8 +239,7 @@ function check_wordpress_local($url){
         return "0";
 }
 
-function check_wordpress_remote(){
-    $contents = read_remote_file(9);
+function check_wordpress_remote($contents){
     if($contents) {
         $wordpress_array = unserialize($contents);
         return trim($wordpress_array['offers'][0]['current']);
@@ -283,8 +253,7 @@ function check_pluxml_local($url){
     return trim($contents);
 }
 
-function check_pluxml_remote(){
-    $contents = read_remote_file(8);
+function check_pluxml_remote($contents){
     if($contents) {
         return trim($contents);
     }
