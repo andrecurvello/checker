@@ -14,4 +14,9 @@ $remote_url = array(
     "symfony" => "https://raw.github.com/symfony/symfony-standard/2.1/composer.lock",
 );
 
+function get_remote_url() {
+    global $remote_url;
+    return $remote_url;
+}
+
 ?>
