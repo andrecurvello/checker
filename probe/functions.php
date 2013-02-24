@@ -1,6 +1,6 @@
 <?php
 
-//error_reporting(0);
+error_reporting(0);
 header("content-type: application/json");
 
 
@@ -37,7 +37,6 @@ function get_nodes($nodes){
     
     return $results;
 }
-
 
 function check_piwigo_local($url){
     $contents = read_file($url."/include/constants.php");
@@ -203,7 +202,10 @@ function check_gitlab_local($url){
 
 function check_gitlab_remote($contents){
     if($contents) {
-        return trim($contents);
+        if(preg_match("/<strong>v(.*) released<\/strong>/", $contents, $matches))
+            return trim($matches[1]);
+        else
+            return "0";
     }
     return "0";
 }
