@@ -202,10 +202,7 @@ function check_gitlab_local($url){
 
 function check_gitlab_remote($contents){
     if($contents) {
-        if(preg_match("/<strong>v(.*) released<\/strong>/", $contents, $matches))
-            return trim($matches[1]);
-        else
-            return "0";
+        return trim($contents);
     }
     return "0";
 }
