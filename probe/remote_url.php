@@ -2,7 +2,7 @@
 
 $remote_url = array(
     "piwigo" => "http://piwigo.org/download/all_versions.php",
-    "owncloud" => "https://raw.github.com/owncloud/core/stable45/lib/util.php",
+    "owncloud" => "https://raw.github.com/owncloud/core/stable5/lib/util.php",
     "phpsysinfo" => "https://raw.github.com/rk4an/phpsysinfo/stable/config.php",
     "dokuwiki" => "https://raw.github.com/splitbrain/dokuwiki/stable/VERSION",
     "phpmyadmin" => "http://www.phpmyadmin.net/home_page/version.js",
