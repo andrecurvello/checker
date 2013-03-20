@@ -119,14 +119,13 @@ function check_mediawiki_local($url){
         return "0";
 }
 
-function check_mediawiki_remote(){
-    /**
-     * The default ls in OS X does not have version sort capabilities 
-     *
-     * exec("git ls-remote --tags https://gerrit.wikimedia.org/r/p/mediawiki/core.git | cut  -f2 | tr -d 'refs/tags/' | sort -r --version-sort --field-separator=. -k2 | head -n 1", $output);
-     */
-    exec("git ls-remote --tags https://gerrit.wikimedia.org/r/p/mediawiki/core.git | cut  -f2 | tr -d 'refs/tags/' | sort -t. -k 1,1nr -k 2,2nr -k 3,3nr -k 4,4nr | head -n 1", $output);
-    return $output[0];
+function check_mediawiki_remote($contents){
+    if(!$contents) return "0";
+    
+    $json = json_decode($contents);
+    $package = $json->{'packages'};
+
+    return get_last_version_packagist($package);
 }
 
 function check_dokuwiki_local($url){
@@ -220,42 +219,13 @@ function check_symfony_local($url){
 }
 
 function check_symfony_remote($contents){
-
+    if(!$contents) return "0";
+    
     $json = json_decode($contents);
     $package = $json->{'packages'};
-    $last_v = "0.0.0.0";
 
-    foreach ($package as $property=>$value){
-        foreach ($value as $p=>$v){
-            $parser = new VersionParser();
-            
-            if($parser->parseStability($p) == "stable") {
-                $version = $parser->normalize($p);
-                $current = explode(".", $version);
-                $last = explode(".", $last_v);
-                
-                if($current[0] > $last[0]) {
-                    $last_v = $version;
-                }
-                elseif($current[0] == $last[0]) {
-                    if($current[1] > $last[1]) {
-                        $last_v = $version;
-                    }
-                    elseif($current[1] == $last[1]) {
-                        if($current[2] > $last[2]) {
-                            $last_v = $version;
-                        }
-                    }
-                }
-            }
-        }
-    }
-
-    return $last_v;
+    return get_last_version_packagist($package);
 }
-
-  
-
 
 function check_wordpress_local($url){
     $contents = read_file($url."/wp-includes/version.php");
@@ -286,6 +256,38 @@ function check_pluxml_remote($contents){
         return trim($contents);
     }
     return "0";
+}
+
+function get_last_version_packagist($package) {
+    $last_v = "0.0.0.0";
+    foreach ($package as $property=>$value){
+        foreach ($value as $p=>$v){
+            $parser = new VersionParser();
+            
+            if($parser->parseStability($p) == "stable") {
+                $version = $parser->normalize($p);
+                $current = explode(".", $version);
+                $last = explode(".", $last_v);
+                
+                if($current[0] > $last[0]) {
+                    $last_v = $version;
+                }
+                elseif($current[0] == $last[0]) {
+                    if($current[1] > $last[1]) {
+                        $last_v = $version;
+                    }
+                    elseif($current[1] == $last[1]) {
+                        if($current[2] > $last[2]) {
+                            $last_v = $version;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    $tmp = explode(".",$last_v);
+    $version = $tmp[0].".".$tmp[1].".".$tmp[2];
+    return $version;
 }
 
 ?>

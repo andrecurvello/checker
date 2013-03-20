@@ -12,6 +12,7 @@ $remote_url = array(
     "pluxml" => "https://raw.github.com/pluxml/PluXml/master/version",
     "wordpress" => "http://api.wordpress.org/core/version-check/1.6/",
     "symfony" => "https://packagist.org/p/symfony/symfony.json",
+    "mediawiki" => "https://packagist.org/p/mediawiki/core.json"
 );
 
 function get_remote_url() {
