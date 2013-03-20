@@ -11,7 +11,7 @@ $remote_url = array(
     "gitlab" => "https://raw.github.com/gitlabhq/gitlabhq/stable/VERSION",
     "pluxml" => "https://raw.github.com/pluxml/PluXml/master/version",
     "wordpress" => "http://api.wordpress.org/core/version-check/1.6/",
-    "symfony" => "https://raw.github.com/symfony/symfony-standard/2.2/composer.lock",
+    "symfony" => "https://packagist.org/p/symfony/symfony.json",
 );
 
 function get_remote_url() {

@@ -1,8 +1,9 @@
 <?php
 
-error_reporting(0);
+//error_reporting(0);
 header("content-type: application/json");
 
+include("VersionParser.php"); 
 
 function read_file($file){
     if(!file_exists($file)) 
@@ -219,14 +220,42 @@ function check_symfony_local($url){
 }
 
 function check_symfony_remote($contents){
-    if($contents) {
-        if(preg_match('/"name": "symfony\/symfony",'."\n".'(.*)"version": "v(.*)",/', $contents, $matches))
-            return trim($matches[2]);
-        else
-            return "0";
+
+    $json = json_decode($contents);
+    $package = $json->{'packages'};
+    $last_v = "0.0.0.0";
+
+    foreach ($package as $property=>$value){
+        foreach ($value as $p=>$v){
+            $parser = new VersionParser();
+            
+            if($parser->parseStability($p) == "stable") {
+                $version = $parser->normalize($p);
+                $current = explode(".", $version);
+                $last = explode(".", $last_v);
+                
+                if($current[0] > $last[0]) {
+                    $last_v = $version;
+                }
+                elseif($current[0] == $last[0]) {
+                    if($current[1] > $last[1]) {
+                        $last_v = $version;
+                    }
+                    elseif($current[1] == $last[1]) {
+                        if($current[2] > $last[2]) {
+                            $last_v = $version;
+                        }
+                    }
+                }
+            }
+        }
     }
-    return "0";
+
+    return $last_v;
 }
+
+  
+
 
 function check_wordpress_local($url){
     $contents = read_file($url."/wp-includes/version.php");
