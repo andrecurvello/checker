@@ -1,0 +1,8 @@
+{
+  "name": "www",
+  "version": "0.0.0",
+  "dependencies": {
+    "bootstrap": "~2.3.1",
+    "transparency": "~0.9.13"
+  }
+}

@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <link href="css/bootstrap.css" rel="stylesheet">
+    <link href="components/bootstrap/docs/assets/css/bootstrap.css" rel="stylesheet">
     <style>
       body {
         padding-top: 20px;
@@ -50,7 +50,7 @@
       }
 
     </style>
-    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="components/bootstrap/docs/assets/css/bootstrap-responsive.css" rel="stylesheet">
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -97,8 +97,8 @@
     
     </div> <!-- /container -->
     
-    <script src="js/jquery.js"></script>
-    <script src="js/transparency.min.js"></script>
+    <script src="components/jquery/jquery.min.js"></script>
+    <script src="components/transparency/dist/transparency.js"></script>
     <script src="js/display.js"></script>
 
   </body>
