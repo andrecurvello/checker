@@ -29,7 +29,7 @@ class remoteTest extends PHPUnit_Framework_TestCase {
         $this->assertRegExp($default_regex, check_piwigo_remote($remote_content[0]));
         $this->assertRegExp($default_regex, check_owncloud_remote($remote_content[1]));
         $this->assertRegExp($default_regex, check_phpsysinfo_remote($remote_content[2]));
-        $this->assertRegExp($default_regex, check_mediawiki_remote(11));
+        $this->assertRegExp($default_regex, check_mediawiki_remote($remote_content[11]));
         //$this->assertRegExp($default_regex, check_dokuwiki_remote($remote_content[3]));
         $this->assertRegExp($default_regex, check_phpmyadmin_remote($remote_content[4]));
         $this->assertRegExp($default_regex, check_checker_remote($remote_content[5]));
