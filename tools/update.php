@@ -21,7 +21,7 @@ while(1) {
         echo  $app_name . " : " . $app_version->{'remote'} . "\n";
         
         if(array_key_exists($app_name,$apps)) {
-            if($apps[$app_name] =! $app_version->{'remote'}) {
+            if($apps[$app_name] != $app_version->{'remote'}) {
                 mail($email, $title.$app_name, $title.$app_name);
                 $apps[$app_name] = $app_version->{'remote'};
             }
