@@ -1,15 +1,19 @@
 Checker
 =========================
 
-[![Build Status](https://travis-ci.org/rk4an/checker.png?branch=dev)](https://travis-ci.org/rk4an/checker)
+[![Build Status](https://travis-ci.org/rk4an/checker.png?branch=master)](https://travis-ci.org/rk4an/checker)
 
 **Keep your web apps up-to-date**
+
+Installation:
+ * git clone https://github.com/rk4an/checker.git
+ * cd www
+ * bower install (required nodejs and bower)
 
 Features:
  * Multiple servers support
 
 Supported apps:
-
  * Piwigo
  * OwnCloud
  * phpSysInfo
