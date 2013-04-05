@@ -8,7 +8,7 @@ script: for i in `find . -name "*.php"`; do php -l $i; done; phpunit
 
 branches:
   only:
-    - "dev"
+    - "master"
 
 notifications:
   email: false
