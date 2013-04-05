@@ -1,21 +1,20 @@
-<?php 
+<?php
 
-require_once("probe/functions.php");
-require_once("probe/remote_url.php");
+require_once 'probe/functions.php';
+require_once 'probe/remote_url.php';
 
-class remoteTest extends PHPUnit_Framework_TestCase {
-
-    protected function setUp() {
-
-
+class remoteTest extends PHPUnit_Framework_TestCase
+{
+    protected function setUp()
+    {
     }
 
-    protected function tearDown() {
-
+    protected function tearDown()
+    {
     }
 
-    public function testRemote() {
-
+    public function testRemote()
+    {
         $remote_url = get_remote_url();
         //build an array for doing a multi curl request
         foreach ($remote_url as $name=>$url) {

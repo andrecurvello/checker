@@ -15,9 +15,9 @@ $remote_url = array(
     "mediawiki" => "https://packagist.org/p/mediawiki/core.json"
 );
 
-function get_remote_url() {
+function get_remote_url()
+{
     global $remote_url;
+
     return $remote_url;
 }
-
-?>

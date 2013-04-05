@@ -30,6 +30,6 @@ curl_setopt($handle, CURLOPT_SSL_VERIFYPEER, false);
 $response = curl_exec($handle);
 $code = curl_getinfo($handle, CURLINFO_HTTP_CODE);
 
-if($code == 200) {
+if ($code == 200) {
     echo $response;
 }

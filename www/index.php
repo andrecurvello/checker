@@ -72,9 +72,9 @@
 
     <div class="server">
       <div class="label label-info"><h5 class="url span7"></h5></div>
-      
+
       <table class="table table-hover table-condensed">
-        
+
         <thead>
           <tr>
             <th>Apps</th>
@@ -82,21 +82,21 @@
             <th>Latest</th>
           </tr>
         </thead>
-        
+
         <tbody class="tbl_content">
           <tr><td class="app"></td><td class="vs"></td><td class="latest"></td></tr>
         </tbody>
-        
+
       </table>
 
       <hr />
 
     </div>
-    
+
     <div id="loader" style="display:none"><img src="img/ajax-loader.gif"></div>
-    
+
     </div> <!-- /container -->
-    
+
     <script src="components/jquery/jquery.min.js"></script>
     <script src="components/transparency/dist/transparency.js"></script>
     <script src="js/display.js"></script>

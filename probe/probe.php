@@ -1,8 +1,8 @@
 <?php
 
-require_once("config_probe.php");
-require_once("functions.php");
-require_once("remote_url.php");
+require_once 'config_probe.php';
+require_once 'functions.php';
+require_once 'remote_url.php';
 
 $json_version = array();
 
@@ -23,16 +23,13 @@ $remote_content = get_nodes($remote);
 //check all remote version
 $i=0;
 foreach ($hosts as $name=>$url) {
-    if(array_key_exists(strtolower($name),$remote_url)) {
+    if (array_key_exists(strtolower($name),$remote_url)) {
         $json_version[$name]['remote'] = call_user_func("check_".strtolower($name)."_remote", $remote_content[$i]);
         $i++;
-    }
-    else {
+    } else {
         $json_version[$name]['remote'] = call_user_func("check_".strtolower($name)."_remote");
     }
-    
+
 }
 
 echo json_encode(array($json_version));
-
-?>
